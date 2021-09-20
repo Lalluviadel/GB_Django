@@ -16,7 +16,7 @@
 
             <h1 class="my-4">GeekShop</h1>
             <div class="list-group">
-                {% for item in list_group %}
+                {% for item in category %}
                     <a href="#" class="list-group-item">{{ item.name }}</a>
 
                    {% comment %}
@@ -69,7 +69,7 @@
                     <div class="card h-100">
                         <a href="#">
                             <img class="card-img-top"
-                                 src="{% static ''%}{{ product.img }}"
+                                 src="/media/{{ product.image }}"
                                  alt="">
                         </a>
                         <div class="card-body">
@@ -78,7 +78,6 @@
                             </h4>
                             <h5>{{ product.price }} руб.</h5>
                             <p class="card-text">{{ product.description }}</p>
-                            <p>{% now "d.m.Y" %}</p>
                         </div>
                         <div class="card-footer text-center">
                             <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
