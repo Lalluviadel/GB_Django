@@ -63,6 +63,9 @@ class UserProfileForm(UserChangeForm):
 
     def clean_image(self):
         data = self.cleaned_data['image']
-        if data.size > 1024:
-            raise ValidationError('Файл слишком большой')
+        if data:
+        # без этого условия при попытке сохранить изменения профиля на сайте
+        # без загрузки картинки пользователь получит ошибку
+            if data.size > 1000000:
+                raise forms.ValidationError('Файл слишком большой')
         return data
