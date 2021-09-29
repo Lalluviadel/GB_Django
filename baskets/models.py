@@ -1,7 +1,4 @@
 from django.db import models
-
-from django.http import request ####
-
 from users.models import User
 from products.models import Product
 
@@ -23,7 +20,6 @@ class Basket(models.Model):
     def total_quantity(self,cumulative_qua=0):
         basket_query_set = Basket.objects.filter(user=self.user.id)
         for item in basket_query_set:
-            print(item.quantity)
             cumulative_qua += item.quantity
         return cumulative_qua
 

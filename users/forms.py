@@ -1,3 +1,4 @@
+import re
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, \
     UserCreationForm, ValidationError, UserChangeForm
@@ -64,4 +65,22 @@ class UserProfileForm(UserChangeForm):
             # без if data and при попытке сохранить изменения профиля на сайте
             # без загрузки картинки изначально пользователь получит ошибку
             raise forms.ValidationError('Файл с изображением не должен быть больше 3 MB')
+        return data
+
+
+    def clean_last_name(self):
+        data = self.cleaned_data['last_name']
+        if re.search(r'\d+', data):
+            raise ValidationError('Фамилия не должна включать цифры')
+        elif len(data) < 3:
+            raise ValidationError('Слишком короткая фамилия')
+        return data
+
+
+    def clean_first_name(self):
+        data = self.cleaned_data['first_name']
+        if re.search(r'\d+', data):
+            raise ValidationError('Имя не должно включать цифры')
+        elif len(data) < 3:
+            raise ValidationError('Слишком короткое имя')
         return data
