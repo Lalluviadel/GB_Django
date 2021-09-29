@@ -6,7 +6,12 @@
            {% if form.errors %}
                 <div class="alert alert-warning alert-dismissible fade show" role="alert"
                      style="margin-top: 50px;">
-                    {{ form.errors|escape }}
+{#                    {{ form.errors|escape }}#}
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ error|escape }}</li>
+                    {% endfor %}
+                {% endfor %}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
