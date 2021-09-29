@@ -7,8 +7,5 @@ urlpatterns = [
 
     path('add/<int:product_id>/', basket_add, name='basket'),
     path('remove/<int:product_id>/', basket_remove, name='basket_remove'),
-#     path('login/', login, name='login'),
-#     path('register/', register, name='register'),
-#     path('profile/', profile, name='profile'),
-#     path('logout/', logout, name='logout'),
+
 ]

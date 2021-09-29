@@ -30,8 +30,8 @@
      {% endfor %}
     <div class="card mb-3">
         <div class="card-footer">
-            <p class="float-left">Итого</p>
-            <h4 class="float-right">2 390 руб.</h4>
+            <p class="float-left">Итого {{ baskets.first.total_quantity }} товаров на сумму</p>
+            <h4 class="float-right"> {{ baskets.first.total_sum }} руб.</h4>
         </div>
     </div>
     <button type="button" class="btn btn-success btn-lg float-right">Оформить</button>
