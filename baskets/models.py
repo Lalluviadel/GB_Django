@@ -17,6 +17,17 @@ class Basket(models.Model):
         return self.quantity * self.product.price
 
 
+    # Lesson_06 teacher's solution #3
+    # def total_sum(self):
+    #     baskets = Basket.objects.filter(user=self.user),
+    #     return sum(basket.sum() for basket in baskets)
+    #
+    #
+    # def total_quantity(self):
+    #     baskets = Basket.objects.filter(user=self.user),
+    #     return sum(basket.quantity for basket in baskets)
+
+
     def total_quantity(self,cumulative_qua=0):
         basket_query_set = Basket.objects.filter(user=self.user.id)
         for item in basket_query_set:
