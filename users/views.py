@@ -50,10 +50,10 @@ def profile(request):
             form.save()
             messages.success(request, 'Вы успешно внесли изменения')
             return HttpResponseRedirect(reverse('users:profile'))
+        else:
+            messages.error(request, 'Профиль не сохранен')
     else:
-        messages.error(request, 'Профиль не сохранен')
         form = UserProfileForm(instance=request.user)
-
 
         # Lesson_06 teacher's solution #1
         # total_sum = 0
