@@ -1,12 +1,13 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from admins.forms import UserAdminRegisterForm, UserAdminProfileForm
+from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, CategoryProductsForm
 from geekshop.mixin import CustomDispatchMixin
+from products.models import ProductCategory, Product
 from users.models import User
 
 
@@ -62,3 +63,50 @@ class UserDeleteView(DeleteView):
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
+
+class CategoriesListView(ListView):
+    model = ProductCategory
+    template_name = 'admins/admin-category-read.html'
+    context_object_name = 'categories'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Админка | Категории'
+        context['objects']: ProductCategory.objects.all()
+        return context
+
+
+class CategoriesUpdateView(UpdateView):
+    model = ProductCategory
+    template_name = 'admins/admin-categories-update-delete.html'
+    form_class = CategoryProductsForm
+    success_url = reverse_lazy('admins:admins_categories')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Админка | Обновление категории'
+        return context
+
+
+class CategoriesCreateView(CreateView):
+    model = ProductCategory
+    template_name = 'admins/admin-categories-create.html'
+    form_class = CategoryProductsForm
+    success_url = reverse_lazy('admins:admins_categories')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Админка | Создание категории'
+        return context
+
+
+class CategoriesDeleteView(DeleteView):
+    model = ProductCategory
+    template_name = 'admins/admin-category-read.html'
+    success_url = reverse_lazy('admins:admins_categories')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.available = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
