@@ -3,38 +3,47 @@
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid">
-                <h1 class="mt-4">Категории</h1>
+                <h1 class="mt-4">Продукты</h1>
                 <div class="card mb-4">
                     <div class="card-header">
                         <i class="fas fa-table mr-1"></i>
-                        Категории
+                        Продукты
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
-                                    <th>Название</th>
+                                    <th>Название продукта</th>
+                                    <th>Категория</th>
                                     <th>Описание</th>
+                                    <th>Цена</th>
+                                    <th>Количество</th>
                                     <th>Активный</th>
                                 </tr>
                                 </thead>
                                 <tfoot>
                                 <tr>
-                                    <th>Название</th>
+                                    <th>Название продукта</th>
+                                    <th>Категория</th>
                                     <th>Описание</th>
+                                    <th>Цена</th>
+                                    <th>Количество</th>
                                     <th>Активный</th>
                                 </tr>
                                 </tfoot>
                                 <tbody>
-                                {% for category in categories %}
-                                    <tr {% if not category.available %} bgcolor="#d3d3d3" {% endif %}>
-                                        <td><a href="{% url 'admins:admins_category_update' category.id %}"
-                                               style="color: dodgerblue">{{ category.name }}</a>
+                                {% for product in products %}
+                                    <tr {% if not product.available %} bgcolor="#d3d3d3" {% endif %}>
+                                        <td><a href="{% url 'admins:admins_product_update' product.id %}"
+                                               style="color: dodgerblue">{{ product.name }}</a>
                                         </td>
-                                        <td>{{ category.description }}</td>
+                                        <td>{{ product.category }}</td>
+                                        <td>{{ product.description }}</td>
+                                        <td>{{ product.price }}</td>
+                                        <td>{{ product.quantity }}</td>
                                         <td class="text-center">
-                                            {% if category.available %}
+                                            {% if product.available %}
                                                 <i class="fas fa-check-circle"></i>
                                             {% else %}
                                                 <i class="fas fa-times-circle"></i>
@@ -47,8 +56,8 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="{% url 'admins:admins_category_create' %}">
-                            <button class="btn btn-success">Создать категорию</button>
+                        <a href="{% url 'admins:admins_product_create' %}">
+                            <button class="btn btn-success">Создать новый продукт</button>
                         </a>
                     </div>
                 </div>
