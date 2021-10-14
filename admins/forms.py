@@ -44,6 +44,7 @@ class CategoryProductsForm(ModelForm):
 class ProductsForm(ModelForm):
     category = forms.ModelChoiceField(queryset=ProductCategory.objects.all(),
                                       empty_label=None)
+    image = forms.ImageField(widget=forms.FileInput, required=False)
 
     class Meta:
         model = Product

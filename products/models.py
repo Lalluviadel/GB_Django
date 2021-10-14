@@ -17,5 +17,8 @@ class Product(models.Model):
     category = models.ForeignKey(ProductCategory,on_delete=models.CASCADE)
     available = models.BooleanField(default=True)
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return f'{self.name} | {self.category}'
