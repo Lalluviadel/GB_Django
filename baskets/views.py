@@ -4,23 +4,16 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, UpdateView
 
+from geekshop.mixin import UserDispatchMixin
 from products.models import Product
 from baskets.models import Basket
 
 
-class BasketCreateView(CreateView):
+class BasketCreateView(CreateView, UserDispatchMixin):
     model = Basket
     template_name = 'products/products.html'
     fields = ['product']
     success_url = reverse_lazy('products:index')
-    paginate_by = 3
-
-
-    def get_queryset(self):
-        if self.kwargs.keys():
-            return Product.objects.filter(category=self.kwargs['category_id'])
-        else:
-            return Product.objects.all()
 
 
     def post(self, request, *args, **kwargs):
@@ -34,8 +27,21 @@ class BasketCreateView(CreateView):
             basket.save()
 
 
+        # paginator = Paginator(Product.objects.filter(), per_page=3)
+        # try:
+        #     products_paginator = paginator.page(1)
+        # except PageNotAnInteger:
+        #     products_paginator = paginator.page(1)
+        # except EmptyPage:
+        #     products_paginator = paginator.page(paginator.num_pages)
+
+        # context = {
+            # 'products': products_paginator,
+        # }
+
         context = super().get_context_data(**kwargs)
         context.update({'products': Product.objects.all()})
+        # result = render_to_string('include/product_items.html', request=request)
         result = render_to_string('include/product_items.html', context, request=request)
         return JsonResponse({'result': result})
 
@@ -45,11 +51,11 @@ class BasketDeleteView(DeleteView):
     template_name = 'users/profile.html'
     success_url = reverse_lazy('users:profile')
 
-
-class BasketUpdateView(UpdateView):
+class BasketUpdateView(UpdateView, UserDispatchMixin):
     model = Basket
     success_url = reverse_lazy('users:profile')
     template_name = 'users/profile.html'
+    fields = ['product']
 
     def get(self, request, *args, **kwargs):
         basket_id = kwargs.pop('id', None)
@@ -62,10 +68,7 @@ class BasketUpdateView(UpdateView):
             else:
                 basket.delete()
 
-            baskets = Basket.objects.filter(user=request.user)
-            context = {
-                'baskets': baskets,
-            }
-            result = render_to_string('baskets/baskets.html', context)
+            result = render_to_string('baskets/baskets.html', request=request)
+
             return JsonResponse({'result': result})
-        return redirect(self.success_url)
+        return redirect(self)
