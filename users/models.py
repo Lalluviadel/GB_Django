@@ -46,7 +46,10 @@ class UserProfile(models.Model):
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            UserProfile.objects.create(instance)
+            # UserProfile.objects.create(instance)
+            # без прописывания именованного аргумента мы получим ошибку,
+            # т.к. будут переданы два позиционных (self и instance)
+            UserProfile.objects.create(user=instance)
 
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):

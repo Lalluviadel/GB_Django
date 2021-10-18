@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 from .models import Product
 
@@ -24,3 +24,11 @@ class ProductsView(ListView):
         if self.kwargs.keys():
             return Product.objects.filter(category_id=self.kwargs['category_id'])
         return Product.objects.all()
+
+
+
+def modal_window(request, product_id):
+    m_product = get_object_or_404(Product, id=product_id)
+    context = {}
+    context['m_product'] = m_product
+    return render(request, 'products/modal.html', context)

@@ -4,8 +4,8 @@ from urllib.parse import urlunparse, urlencode
 
 import requests
 from django.utils import timezone
-from social_core.exceptions import AuthException, AuthForbidden
-from users.models import UserProfile
+from social_core.exceptions import AuthForbidden
+from users.models import UserProfile, User
 
 
 def save_user_profile(backend, user, response, *args, **kwargs):
@@ -41,9 +41,14 @@ def save_user_profile(backend, user, response, *args, **kwargs):
 
     bdate = datetime.strptime(data['bdate'], '%d.%m.%Y').date()
 
+
+    if response['email'] and not User.objects.filter(email=response['email']).exists():
+        user.email = response['email']
+
     age = timezone.now().date().year - bdate.year
     user.age = age
     if age < 18:
+    # if age < 100:
         user.delete()
         raise AuthForbidden('social_core.backends.vk.VK0Auth2')
     user.save()
