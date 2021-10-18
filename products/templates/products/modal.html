@@ -1,0 +1,28 @@
+{% load method %}
+<form class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+    <div class="product_viewer">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <h5 class="modal-title" id="exampleModalLabel">{{ m_product.name }}</h5>
+                <div class="modal-header">
+
+                    <div class="card-body">
+                        <div>
+                            <p class="card-text">Обычная цена</p>
+                            <h4><s>{% discount m_product.price %}</s> руб.</h4>
+                        </div>
+                        <div style="background-color:#8ebf42">
+                            <p class="card-text">Специальная цена с вашей скидкой</p>
+                            <h2>{{ m_product.price }} руб.</h2>
+                        </div>
+                        <h6>Этот товар сейчас просматривают <span id="random"></span> человек </h6>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
