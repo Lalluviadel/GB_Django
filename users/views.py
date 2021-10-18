@@ -7,7 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import FormView, UpdateView
 from geekshop.mixin import BaseClassContextMixin, UserDispatchMixin
 
-from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm
 from users.models import User
 
 
@@ -33,8 +33,7 @@ class RegisterListView(FormView, BaseClassContextMixin):
                                           f'{user.email} отправлено письмо со '
                                           f'ссылкой для активации аккаунта {user.username}')
             return redirect(self.success_url)
-        else:
-            messages.warning(request, f'{form.errors}')
+        messages.warning(request, f'{form.errors}')
 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -49,9 +48,15 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
     def get_object(self, queryset=None):
         return get_object_or_404(User, pk=self.request.user.pk)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile'] = UserProfileEditForm(instance=self.request.user.userprofile)
+        return context
+
     def post(self, request, *args, **kwargs):
-        form = self.form_class(data=request.POST, files=request.FILES, instance=self.get_object())
-        if form.is_valid():
+        form = UserProfileForm(data=request.POST, files=request.FILES, instance=request.user)
+        form_edit = UserProfileEditForm(data=request.POST,instance=request.user.userprofile)
+        if form.is_valid() and form_edit.is_valid():
             form.save()
             return redirect(self.success_url)
         return redirect(self.success_url)
@@ -60,7 +65,8 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
 def send_verify_link(user):
     verify_link = reverse('users:verify', args=[user.email, user.activation_key])
     subject = f"Для активации учетной записи {user.username} пройдите по ссылке"
-    message = f"Для подтвердения учетной записи {user.username} на портале \n {settings.DOMAIN_NAME}{verify_link}"
+    message = f"Для подтвердения учетной записи {user.username} на портале " \
+              f"\n {settings.DOMAIN_NAME}{verify_link}"
     return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
 
 

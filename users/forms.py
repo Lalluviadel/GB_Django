@@ -6,7 +6,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, \
     UserCreationForm, ValidationError, UserChangeForm
 
-from users.models import User
+from users.models import User, UserProfile
 
 
 class UserLoginForm(AuthenticationForm):
@@ -69,7 +69,16 @@ class UserProfileForm(UserChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['readonly'] = True
-        self.fields['email'].widget.attrs['readonly'] = True
+
+        """ Временно убрала режим 'только для чтения' для email.
+         При регистрации через соцсети email не подтягивается, а полю
+         email в нашей модели User не допускается быть пустым. Поэтому сигнал
+         при редактировании профиля не будет срабатывать, а профиль сохраняться - 
+         у нас стоит условие быть валидными обеим формам (а form не будет валидной
+         с пустым email).
+         Поэтому, сначала следует заполнить поле email, только потом сигнал будет 
+         отрабатываеть."""
+        # self.fields['email'].widget.attrs['readonly'] = True
 
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control py-4'
@@ -96,3 +105,18 @@ class UserProfileForm(UserChangeForm):
         elif len(data) < 3:
             raise ValidationError('Слишком короткое имя')
         return data
+
+class UserProfileEditForm(forms.ModelForm):
+
+    class Meta:
+        model = UserProfile
+        fields = ('tagline', 'about', 'gender', 'language')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            if field_name != 'gender':
+                field.widget.attrs['class'] = 'form-control py-4'
+            else:
+                field.widget.attrs['class'] = 'form-control'
