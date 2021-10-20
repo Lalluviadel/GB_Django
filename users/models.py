@@ -41,15 +41,15 @@ class UserProfile(models.Model):
     gender = models.CharField(verbose_name='пол', choices=GENDER_CHOICES, blank=True, max_length=5)
 
     language = models.CharField(verbose_name='язык', max_length=128, blank=True)
-    photo = models.ImageField(upload_to='user_image', blank=True)
+    # photo = models.ImageField(upload_to='user_image', blank=True)
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            # UserProfile.objects.create(instance)
+            UserProfile.objects.create(instance)
             # без прописывания именованного аргумента мы получим ошибку,
             # т.к. будут переданы два позиционных (self и instance)
-            UserProfile.objects.create(user=instance)
+            # UserProfile.objects.create(user=instance)
 
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
