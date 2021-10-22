@@ -1,6 +1,7 @@
 {% load method %}
 <form class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
       aria-hidden="true">
+    {% csrf_token %}
     <div class="product_viewer">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

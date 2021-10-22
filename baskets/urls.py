@@ -7,3 +7,5 @@ urlpatterns = [
     path('remove/<int:pk>/', BasketDeleteView.as_view(), name='basket_remove'),
     path('edit/<int:id>/<int:quantity>/', BasketUpdateView.as_view(), name='basket_edit'),
 ]
+
+

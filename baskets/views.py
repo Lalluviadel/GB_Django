@@ -51,6 +51,7 @@ class BasketDeleteView(DeleteView):
     template_name = 'users/profile.html'
     success_url = reverse_lazy('users:profile')
 
+
 class BasketUpdateView(UpdateView, UserDispatchMixin):
     model = Basket
     success_url = reverse_lazy('users:profile')

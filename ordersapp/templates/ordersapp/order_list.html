@@ -1,10 +1,10 @@
-{% extends 'mainapp/base.html' %}
+{% extends 'products/base.html' %}
 {% load static %}
 
 
 {% block content %}
     <div class="text-center">
-        <div class="h2 text-center head">
+        <div style="color:#00FF00" class="h2 text-center head">
             Ваши заказы,
             {% if user.first_name %}
                 {{ user.first_name|title }}
@@ -12,19 +12,37 @@
                 Пользователь
             {% endif %}
         </div>
+        <div class="h2 text-center head">
+            Ваши заказы,
+            {% if user.username %}
+                {{ user.username|title }}
+            {% else %}
+                Пользователь
+            {% endif %}
+        </div>
         <table class="table orders_list">
             <thead>
             <tr>
+                <th>Сменить статус</th>
                 <th>ID</th>
                 <th>Создан</th>
                 <th>Обновлен</th>
                 <th>Статус</th>
+                <th>Информация</th>
             </tr>
             </thead>
             <tbody>
             {% for item in object_list %}
                 {% if item.is_active %}
                     <tr>
+                        <td>
+                            {% if item.status == 'FM' %}
+                                <button name="Status">Оформить</button></td>
+                            {% elif item.status == 'CNC' %}
+                                <p>Заказ отменен</p>
+                            {% else %}
+                                <p>Заказ в работе</p>
+                            {% endif %}
                         <td class="td1 orders_list">{{ item.pk }}</td>
                         <td>{{ item.created|date:"Y-m-d H:i:s" }}</td>
                         <td>{{ item.updated|date:"Y-m-d H:i:s" }}</td>
