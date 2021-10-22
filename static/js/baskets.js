@@ -74,9 +74,11 @@ window.onload = () => {
             $.ajax({
                 url: '/products/modal/' + product_id + '/',
                 success: (data) => {
+                    console.log(data)
+                    console.log(data.result)
 
                     if (data) {
-                        $('.product_viewer').html(data)
+                        $('.product_viewer').html(data.result)
                 }
             },
         });
