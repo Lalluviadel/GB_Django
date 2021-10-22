@@ -11,7 +11,7 @@ function getCookie(name) {
             }
         }
     }
-    console.log(cookieValue)
+    // console.log(cookieValue)
     return cookieValue;
 }
 const csrftoken = getCookie('csrftoken');
@@ -82,8 +82,24 @@ window.onload = () => {
         });
         e.preventDefault();
     });
+    $('.send_to_proceed').on('click', 'button[type="button"]', (e) => {
+        let t_href = e.target;
+        console.log(t_href.name)
+        $.ajax({
+                type: 'POST',
+                url: '/orders/forming_complete/' + t_href.name + '/',
+                success: (data) => {
+
+                    if (data) {
+                        $('.text-center').html(data)
+                }
+            },
+        });
+        e.preventDefault();
+    });
 };
 
+
 setInterval(function() {
-    document.getElementById("random").innerHTML = Math.floor
-    (Math.random() * 2) + 1;}, 2000);
+        document.getElementById("random").innerHTML = Math.floor
+        (Math.random() * 2) + 1;}, 2000);
