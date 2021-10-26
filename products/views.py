@@ -28,12 +28,6 @@ class ProductsView(ListView):
         return Product.objects.all()
 
 
-# def modal_window(request, product_id):
-#     m_product = get_object_or_404(Product, id=product_id)
-#     context = {}
-#     context['m_product'] = m_product
-#     return render(request, 'products/modal.html', context)
-
 class ModalWindow(ListView):
     model = Product
     template_name = 'products/modal.html'

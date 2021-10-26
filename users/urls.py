@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import LoginListView, RegisterListView, Logout, ProfileFormView, verify
+from .views import LoginListView, RegisterListView, Logout, ProfileFormView
 
 app_name = 'users'
 urlpatterns = [
@@ -8,5 +8,5 @@ urlpatterns = [
     path('profile/', ProfileFormView.as_view(), name='profile'),
     path('logout/', Logout.as_view(), name='logout'),
 
-    path('verify/<str:email>/<str:activation_key>/', verify, name='verify'),
+    path('verify/<str:email>/<str:activation_key>/', RegisterListView.verify, name='verify'),
 ]

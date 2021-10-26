@@ -19,12 +19,17 @@ class BasketCreateView(CreateView, UserDispatchMixin):
     def post(self, request, *args, **kwargs):
         product = self.get_object(Product.objects.filter())
         baskets = Basket.objects.filter(user=request.user, product=product)
-        if not baskets.exists():
-            Basket.objects.create(user=request.user, product=product, quantity=1)
+
+        if product.quantity >= 1:
+            if not baskets.exists():
+                Basket.objects.create(user=request.user, product=product, quantity=1)
+            else:
+                basket = baskets.first()
+                basket.quantity += 1
+                basket.save()
         else:
-            basket = baskets.first()
-            basket.quantity += 1
-            basket.save()
+            pass
+            # return render(request, 'products/products.html', {'some_flag': True})
 
 
         # paginator = Paginator(Product.objects.filter(), per_page=3)

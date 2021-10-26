@@ -15,15 +15,13 @@
                         <h5>{{ product.price }} руб.</h5>
                         <p class="card-text">{{ product.description }}</p>
                     </div>
-
-                    <div class="product_add">
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-outline-success" name="{{ product.id }}">Отправить
-                                в корзину
-                            </button>
+                        <div class="product_add">
+                            <div class="card-footer text-center">
+                                <button type="button" class="btn btn-outline-success" name="{{ product.id }}">Отправить
+                                    в корзину
+                                </button>
+                            </div>
                         </div>
-                    </div>
-
 
                     <div class="product_view">
                         <div class="card-footer text-center">
@@ -42,5 +40,11 @@
     </div>
 </div>
 
+{#{% if some_flag %}#}
+{#    <script>console.log(1)</script>#}
+{#    <div id="some_flag" title="Some Flag">#}
+{#        <p>Some Text Here</p>#}
+{#    </div>#}
+{#{% endif %}#}
 
 
