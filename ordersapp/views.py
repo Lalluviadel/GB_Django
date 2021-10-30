@@ -1,6 +1,6 @@
 from django.db import transaction
 from django.forms import inlineformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 
 from django.urls import reverse_lazy, reverse
@@ -10,7 +10,7 @@ from baskets.models import Basket
 from geekshop.mixin import BaseClassContextMixin
 from ordersapp.forms import OrderItemsForm
 from ordersapp.models import Order, OrderItem
-
+from products.models import Product
 
 
 class OrderList(ListView):
@@ -119,4 +119,21 @@ def order_forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
     order.status = Order.SEND_TO_PROCEED
     order.save()
-    return  HttpResponseRedirect(reverse('orders:list'))
+    return HttpResponseRedirect(reverse('orders:list'))
+
+def payment_result(request):
+    status = request.GET.get('ik_inv_st')
+    if status == 'success':
+        order_pk = request.GET.get('ik_pm_no')
+        order_item = Order.objects.get(pk=order_pk)
+        order_item.status = Order.PAID
+        order_item.save()
+    return HttpResponseRedirect(reverse('orders:list'))
+
+
+def get_product_price(request, pk):
+    if request.is_ajax():
+        product = Product.objects.get(pk=pk)
+        if product:
+            return JsonResponse({'price': product.price})
+        return JsonResponse({'price': 0})
