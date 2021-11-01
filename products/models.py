@@ -15,7 +15,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=8,decimal_places=2)
     quantity = models.PositiveIntegerField(default=0)
     category = models.ForeignKey(ProductCategory,on_delete=models.CASCADE)
-    available = models.BooleanField(default=True)
+    available = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         ordering = ['id']

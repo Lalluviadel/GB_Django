@@ -17,7 +17,7 @@ class BasketCreateView(CreateView, UserDispatchMixin):
 
 
     def post(self, request, *args, **kwargs):
-        product = self.get_object(Product.objects.filter())
+        product = self.get_object(Product.objects.filter().select_related())
         baskets = Basket.objects.filter(user=request.user, product=product)
 
         if product.quantity >= 1:

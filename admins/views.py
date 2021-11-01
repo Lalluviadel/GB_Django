@@ -122,7 +122,7 @@ class ProductsListView(ListView, CustomDispatchMixin):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Админка | Продукты'
-        context['objects']: Product.objects.all()
+        context['objects'] = Product.objects.all().select_related('category')
         return context
 
 

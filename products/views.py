@@ -24,8 +24,10 @@ class ProductsView(ListView):
 
     def get_queryset(self):
         if self.kwargs.keys():
-            return Product.objects.filter(category_id=self.kwargs['category_id'])
-        return Product.objects.all()
+            # return Product.objects.filter(category_id=self.kwargs['category_id'])
+            return Product.objects.filter(category_id=self.kwargs['category_id']).select_related('category')
+        # return Product.objects.all()
+        return Product.objects.all().select_related('category')
 
 
 class ModalWindow(ListView):

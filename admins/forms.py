@@ -42,7 +42,7 @@ class CategoryProductsForm(ModelForm):
 
 
 class ProductsForm(ModelForm):
-    category = forms.ModelChoiceField(queryset=ProductCategory.objects.all(),
+    category = forms.ModelChoiceField(queryset=ProductCategory.objects.all().select_related(),
                                       empty_label=None)
     image = forms.ImageField(widget=forms.FileInput, required=False)
 
