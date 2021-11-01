@@ -27,6 +27,7 @@ class Basket(models.Model):
         return f'Корзина для {self.user.username} | Продукт {self.product.name}'
 
     def sum(self):
+        # self.product.queryset = Product.objects.all().select_related('price')
         return self.quantity * self.product.price
 
     @staticmethod
@@ -36,23 +37,9 @@ class Basket(models.Model):
 
     @staticmethod
     def total_sum(user):
-        basket_query_set = Basket.objects.filter(user=user)
+        basket_query_set = Basket.objects.filter(user=user).select_related()
         return sum(basket.sum() for basket in basket_query_set)
 
-
-    # def delete(self, using=None, keep_parents=False):
-    #     self.product.quantity += self.quantity
-    #     self.product.save()
-    #     super().delete()
-    #
-    # def save(self, force_insert=False, force_update=False, using=None,
-    #          update_fields=None):
-    #     if self.pk:
-    #         self.product.quantity -= self.quantity - self.get_item(int(self.pk))
-    #     else:
-    #         self.product.quantity -= self.quantity
-    #     self.product.save()
-    #     super().save()
 
     @staticmethod
     def get_item(pk):

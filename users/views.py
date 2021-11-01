@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.mail import send_mail
 from django.shortcuts import render, HttpResponseRedirect, redirect, get_object_or_404
@@ -87,3 +88,12 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
 
 class Logout(LogoutView):
     template_name = 'products/index.html'
+
+
+# class MyBackend:
+#
+#     def get_user(self, user_id):
+#         try:
+#             return get_user_model().objects.select_related().get(pk=user_id)
+#         except get_user_model().DoesNotExist:
+#             return None

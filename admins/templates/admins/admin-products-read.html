@@ -33,7 +33,7 @@
                                 </tr>
                                 </tfoot>
                                 <tbody>
-                                {% for product in products %}
+                                {% for product in objects %}
                                     <tr {% if not product.available %} bgcolor="#d3d3d3" {% endif %}>
                                         <td><a href="{% url 'admins:admins_product_update' product.id %}"
                                                style="color: dodgerblue">{{ product.name }}</a>
