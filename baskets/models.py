@@ -30,15 +30,27 @@ class Basket(models.Model):
         # self.product.queryset = Product.objects.all().select_related('price')
         return self.quantity * self.product.price
 
-    @cached_property
-    def get_items_cached(self):
-        return self.user.basket.select_related()
+    # @cached_property
+    # def get_items_cached(self):
+    #     return self.user.basket.select_related()
 
-    @staticmethod
+    # @cached_property
+    # def get_items_cached(self):
+    #     return self.user.basket.select_related()
+
+    # def total_quantity(self):
+    #     _items = self.get_items_cached
+    #     return sum(list(map(lambda x: x.quantity, _items)))
+
+    # @staticmethod
     def total_quantity(user):
         baskets = Basket.objects.filter(user=user)
         # baskets = self.get_items_cached
         return sum(basket.quantity for basket in baskets)
+
+    # def total_sum(self):
+    #     _items = self.get_items_cached
+    #     return sum(list(map(lambda x: x.product_cost, _items)))
 
     @staticmethod
     def total_sum(user):
