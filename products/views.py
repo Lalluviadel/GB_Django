@@ -1,7 +1,7 @@
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .models import Product, ProductCategory
 from django.conf import settings
 from django.core.cache import cache
@@ -35,6 +35,17 @@ def get_link_product():
         return link_product
     else:
         return Product.objects.all().select_related()
+
+def get_product(pk):
+    if settings.LOW_CACHE:
+        key = f'product{pk}'
+        product = cache.get(key)
+        if product is None:
+            product = get_object_or_404(Product,pk=pk)
+            cache.set(key, product)
+        return product
+    else:
+        return get_object_or_404(Product,pk=pk)
 
 class ProductsView(ListView):
     model = Product
@@ -72,3 +83,18 @@ class ModalWindow(ListView):
 
             return JsonResponse({'result': result})
         return redirect(self)
+
+class ProductDetail(DetailView):
+
+    model = Product
+    template_name = 'products/product_detail.html'
+    context_object_name = 'product'
+
+
+    def get_context_data(self, category_id=None, *args, **kwargs):
+        """Добавляем список категорий для вывода сайдбара с категориями на странице каталога"""
+        context = super().get_context_data()
+
+        context['product'] = get_product(self.kwargs.get('pk'))
+        context['categories'] = ProductCategory.objects.all()
+        return context
