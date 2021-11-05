@@ -15,7 +15,7 @@
                         <h5>{{ product.price }} руб.</h5>
                         <p class="card-text">{{ product.description }}</p>
                     </div>
-
+                    {% if product.quantity > 0 %}
                     <div class="product_add">
                         <div class="card-footer text-center">
                             <button type="button" class="btn btn-outline-success" name="{{ product.id }}">Отправить
@@ -23,7 +23,11 @@
                             </button>
                         </div>
                     </div>
-
+                    {% else %}
+                        <div class="card-footer text-center">
+                        <p style="color:green;"><b>Ожидается поступление</b></p>
+                        </div>
+                    {% endif %}
 
                     <div class="product_view">
                         <div class="card-footer text-center">
