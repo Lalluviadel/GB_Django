@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
-from django.views.generic import ListView
-from .models import Product
+from django.views.generic import ListView, DetailView
+from .models import Product, ProductCategory
 
 
 def index(request):
@@ -27,13 +27,6 @@ class ProductsView(ListView):
             return Product.objects.filter(category_id=self.kwargs['category_id'])
         return Product.objects.all()
 
-
-# def modal_window(request, product_id):
-#     m_product = get_object_or_404(Product, id=product_id)
-#     context = {}
-#     context['m_product'] = m_product
-#     return render(request, 'products/modal.html', context)
-
 class ModalWindow(ListView):
     model = Product
     template_name = 'products/modal.html'
@@ -48,3 +41,18 @@ class ModalWindow(ListView):
 
             return JsonResponse({'result': result})
         return redirect(self)
+
+class ProductDetail(DetailView):
+
+    model = Product
+    template_name = 'products/product_detail.html'
+    context_object_name = 'product'
+
+
+    def get_context_data(self, category_id=None, *args, **kwargs):
+        """Добавляем список категорий для вывода сайдбара с категориями на странице каталога"""
+        context = super().get_context_data()
+
+        context['product'] = get_product(self.kwargs.get('pk'))
+        context['categories'] = ProductCategory.objects.all()
+        return context
