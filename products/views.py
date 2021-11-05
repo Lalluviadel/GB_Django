@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView
 from .models import Product, ProductCategory
@@ -11,6 +11,17 @@ def index(request):
     }
     return render(request, 'products/index.html', context)
 
+def get_product(pk):
+    # if settings.LOW_CACHE:
+    #     key = f'product{pk}'
+    #     product = cache.get(key)
+    #     if product is None:
+    #         product = get_object_or_404(Product,pk=pk)
+    #         cache.set(key, product)
+    #     return product
+    # else:
+    #     return get_object_or_404(Product,pk=pk)
+    return get_object_or_404(Product,pk=pk)
 
 class ProductsView(ListView):
     model = Product

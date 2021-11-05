@@ -16,6 +16,7 @@ class OrderList(ListView):
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user, is_active=True)
 
+
 class OrderCreate(CreateView):
     model = Order
     fields = []
@@ -31,7 +32,8 @@ class OrderCreate(CreateView):
         else:
             basket_items = Basket.objects.filter(user=self.request.user)
             if basket_items:
-                OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemsForm, extra=basket_items.count())
+                OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemsForm,
+                                                     extra=basket_items.count())
                 formset = OrderFormSet()
 
                 for num, form in enumerate(formset.forms):
@@ -59,7 +61,6 @@ class OrderCreate(CreateView):
 
             if self.object.get_total_cost() == 0:
                 self.object.delete()
-
 
         return super().form_valid(form)
 
@@ -108,6 +109,12 @@ class OrderDelete(DeleteView):
 class OrderDetail(DetailView):
     model = Order
     title = 'Geekshop | Просмотр заказа'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['headings'] = ['', 'Категория', 'Товар', 'Цена, руб/шт',
+                               'Кол-во, шт', 'Общая сумма, руб',]
+        return context
 
 def order_forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
