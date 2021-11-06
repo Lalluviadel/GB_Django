@@ -37,7 +37,7 @@ window.onload = () => {
         // console.log(page_id);
         $.ajax({
             type: 'POST',
-            headers: { 'X-CSRF-TOKEN': csrftoken}, // этот работает наконец
+            headers: {'X-CSRF-TOKEN': csrftoken}, // этот работает наконец
             url: '/baskets/add/' + t_href.name + '/',
             data: {'page_id': page_id},
             success: (data) => {
@@ -45,8 +45,9 @@ window.onload = () => {
                     $('.product_items').html(data.result)
                 }
             },
-            error:function(error){
-                console.log(error);}
+            error: function (error) {
+                console.log(error);
+            }
         });
         console.log(page_id)
         e.preventDefault();
@@ -58,6 +59,8 @@ window.onload = () => {
             url: '/baskets/edit/' + t_href.name + '/' + t_href.value + '/',
             success: (data) => {
                 if (data) {
+                    console.log(data)
+                    console.log(data.result)
                     $('.basket_list').html(data.result)
                 }
             },
@@ -69,37 +72,47 @@ window.onload = () => {
     //     $(document).on('click', '.manager_detail', (e) =>{
 
     $('.product_view').on('click', 'button[type="button"]', (e) => {
-            let t_href = e.target;
-            let product_id = t_href.name;
-            $.ajax({
-                url: '/products/modal/' + product_id + '/',
-                success: (data) => {
-                    console.log(data)
-                    console.log(data.result)
-
-                    if (data) {
-                        $('.product_viewer').html(data.result)
+        let t_href = e.target;
+        let product_id = t_href.name;
+        $.ajax({
+            url: '/products/modal/' + product_id + '/',
+            success: (data) => {
+                if (data) {
+                    $('.product_viewer').html(data.result)
                 }
             },
         });
         e.preventDefault();
     });
+
     $('.send_to_proceed').on('click', 'button[type="button"]', (e) => {
         let t_href = e.target;
         console.log(t_href.name)
         $.ajax({
-                type: 'POST',
-                url: '/orders/forming_complete/' + t_href.name + '/',
-                success: (data) => {
-
-                    if (data) {
-                        $('.text-center').html(data)
+            type: 'POST',
+            url: '/orders/forming_complete/' + t_href.name + '/',
+            success: (data) => {
+                if (data) {
+                    console.log(data.result)
+                    $('.text-center').html(data.result)
                 }
             },
         });
         e.preventDefault();
     });
+
+    $('#save_button').on('click', (e) => {
+         $.ajax({
+             type: 'GET',
+             url: '/orders/basket_clear/',
+             }).done(function(){
+            window.location.href="/orders/";
+	    })
+        $( ".read_and_save" ).submit();
+      e.preventDefault();
+    });
 };
+
 
 
 setInterval(function() {

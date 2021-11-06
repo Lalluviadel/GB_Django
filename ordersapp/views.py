@@ -1,13 +1,16 @@
 from django.db import transaction
 from django.forms import inlineformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
 from baskets.models import Basket
+from geekshop.mixin import BaseClassContextMixin
 from ordersapp.forms import OrderItemsForm
 from ordersapp.models import Order, OrderItem
+from products.models import Product
 
 
 class OrderList(ListView):
@@ -38,9 +41,8 @@ class OrderCreate(CreateView):
 
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
-                    form.initial['quantity'] = basket_items[num].product
-                    form.initial['price'] = basket_items[num].product
-                basket_items.delete()
+                    form.initial['quantity'] = basket_items[num].quantity
+                    form.initial['price'] = basket_items[num].product.price
 
             else:
                 formset = OrderFormSet()
@@ -78,6 +80,9 @@ class OrderUpdate(UpdateView):
         if self.request.POST:
             formset = OrderFormSet(self.request.POST, instance=self.object)
         else:
+            # Проверить потом, вот это улучшает или нет (или оно в методичке было)
+            # queryset = self.object.orderitems.select_related()
+            # formset = OrderFormSet(instance=self.object, queryset=queryset)
             formset = OrderFormSet(instance=self.object)
             for form in formset:
                 if form.instance.pk:
@@ -106,7 +111,7 @@ class OrderDelete(DeleteView):
     model = Order
     success_url = reverse_lazy('orders:list')
 
-class OrderDetail(DetailView):
+class OrderDetail(DetailView, BaseClassContextMixin):
     model = Order
     title = 'Geekshop | Просмотр заказа'
 
@@ -116,11 +121,64 @@ class OrderDetail(DetailView):
                                'Кол-во, шт', 'Общая сумма, руб',]
         return context
 
+
+def basket_clear(request):
+    basket_items = Basket.objects.filter(user=request.user)
+    basket_items.delete()
+    return HttpResponseRedirect(reverse('orders:list'))
+
+
 def order_forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
     order.status = Order.SEND_TO_PROCEED
+
+    ''' Вот это мы потом перенесли в ?корзину? но не в этой вьюхе точно'''
     items = order.get_items()
     for item in items:
         item.product.quantity -= item.quantity
+
+    if request.is_ajax():
+        # return JsonResponse({'price': product.price})
+        result = render_to_string('ordersapp/order_list.html', request=request)
+        return JsonResponse({'result': result})
+
     order.save()
     return HttpResponseRedirect(reverse('orders:list'))
+
+
+    # def post(self, request, *args, **kwargs):
+    #     basket_id = kwargs.pop('id', None)
+    #     quantity = kwargs.pop('quantity', None)
+    # if request.is_ajax():
+    #     basket = Basket.objects.get(id=basket_id)
+    #     if quantity > 0:
+    #         basket.quantity = quantity
+    #         basket.save()
+    #     else:
+    #         basket.delete()
+    #
+    #     result = render_to_string('baskets/baskets.html', request=request)
+    #
+    #     return JsonResponse({'result': result})
+    # return redirect(self)
+
+
+
+# Для приделывания робокассы:
+# def payment_result(request):
+#     status = request.GET.get('ik_inv_st')
+#     if status == 'success':
+#         order_pk = request.GET.get('ik_pm_no')
+#         order_item = Order.objects.get(pk=order_pk)
+#         order_item.status = Order.PAID
+#         order_item.save()
+#     return HttpResponseRedirect(reverse('orders:list'))
+
+
+# Подтягивание цены в заказы через аджакс
+# def get_product_price(request, pk):
+#     if request.is_ajax():
+#         product = Product.objects.get(pk=pk)
+#         if product:
+#             return JsonResponse({'price': product.price})
+#         return JsonResponse({'price': 0})
