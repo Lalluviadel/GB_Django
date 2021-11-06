@@ -13,11 +13,15 @@
     </div>
 {% endif %}
 <div class="container">
-    <form action="{% url 'orders:list' %}">
-      <button type="submit" class="btn btn-info form-control my-2 btn-lg">
+{#    <form action="{% url 'orders:list' %}">#}
+
+        <button class="btn btn-info form-control my-2 btn-lg" onclick="window.location.href = '{% url 'orders:list' %}';">
             <i class="fa fa-backward"></i> К списку заказов
-    </button>
-    </form>
+        </button>
+{#      <button type="b" class="btn btn-info form-control my-2 btn-lg">#}
+{#            <i class="fa fa-backward"></i> К списку заказов#}
+{#    </button>#}
+{#    </form>#}
     <form action="{% url 'index' %}">
     <button type="submit" class="btn btn-info form-control my-2 btn-lg">
         <i class="fa fa-home"></i> На главную

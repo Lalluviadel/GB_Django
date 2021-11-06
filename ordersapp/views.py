@@ -125,6 +125,13 @@ def order_forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
     order.status = Order.SEND_TO_PROCEED
     order.save()
+    if request.is_ajax():
+        # return  HttpResponseRedirect(reverse('orders:list'))
+        # return render(request, "ordersapp/order_list.html")
+        # queryset = Order.objects.filter(user=request.user, is_active=True)
+        result = render_to_string('ordersapp/includes/inc_orders_table.html', request=request)
+        return JsonResponse({'result': result})
+
     return  HttpResponseRedirect(reverse('orders:list'))
 
 

@@ -2,7 +2,7 @@ from django.urls import path
 from .views import OrderDelete, OrderUpdate, OrderList, OrderDetail, \
     OrderCreate, order_forming_complete, basket_clear
 
-app_name = 'includes'
+app_name = 'ordersapp'
 urlpatterns = [
     path('', OrderList.as_view(), name='list'),
     path('create/', OrderCreate.as_view(), name='create'),

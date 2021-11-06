@@ -28,13 +28,10 @@ $.ajaxSetup({
     }
 });
 
-
 window.onload = () => {
-
     $('.product_add').on('click', 'button[type="button"]', (e) => {
         let t_href = e.target;
         let page_id = t_href.name;
-        // console.log(page_id);
         $.ajax({
             type: 'POST',
             headers: {'X-CSRF-TOKEN': csrftoken}, // этот работает наконец
@@ -49,7 +46,7 @@ window.onload = () => {
                 console.log(error);
             }
         });
-        console.log(page_id)
+        // console.log(page_id)
         e.preventDefault();
     });
 
@@ -59,8 +56,6 @@ window.onload = () => {
             url: '/baskets/edit/' + t_href.name + '/' + t_href.value + '/',
             success: (data) => {
                 if (data) {
-                    console.log(data)
-                    console.log(data.result)
                     $('.basket_list').html(data.result)
                 }
             },
@@ -85,29 +80,27 @@ window.onload = () => {
         e.preventDefault();
     });
 
-    $('.send_to_proceed').on('click', 'button[type="button"]', (e) => {
+    $('.send_to_proceed').on('click', 'button[class="btn btn-primary"]', (e) => {
         let t_href = e.target;
         $.ajax({
-                type: 'POST',
                 url: '/orders/forming_complete/' + t_href.name + '/',
                 success: (data) => {
 
                     if (data) {
-                        $('#list_all_orders').html(data)
-                        console.log(data)
+                        $('#list_all_orders').html(data.result)
                 }
             },
         });
-        // e.preventDefault();
+        e.preventDefault();
     });
 
     $('#save_button').on('click', (e) => {
-         $.ajax({
+        $.ajax({
              type: 'GET',
              url: '/orders/basket_clear/',
              }).done(function(){
             window.location.href="/orders/";
-	    })
+        })
         $( ".read_and_save" ).submit();
       e.preventDefault();
     });

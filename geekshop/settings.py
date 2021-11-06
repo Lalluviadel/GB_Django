@@ -80,6 +80,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'products.context_processors.basket',
                 'products.context_processors.categories',
+                'products.context_processors.orders',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
             ],

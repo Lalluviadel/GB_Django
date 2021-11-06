@@ -3,7 +3,7 @@
 
 
 {% block content %}
-    <div id="list_all_orders" class="text-center" style="padding-top: 70px;">
+    <div  class="text-center" style="padding-top: 70px;">
         <div style="color: darkcyan; background: #E0FFFF; padding: 20px" class="h2 text-center head">
             Ваши заказы,
             {% if user.first_name %}
@@ -13,61 +13,9 @@
             {% endif %}
         </div>
     </div>
-    <table class="table orders_list">
-        <thead>
-        <tr>
-            <th>Сменить статус</th>
-            <th>ID</th>
-            <th>Создан</th>
-            <th>Обновлен</th>
-            <th>Статус</th>
-            <th>Информация</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for item in object_list %}
-            {% if item.is_active %}
-                <tr>
-                    <td>
-                        {% if item.status == 'FM' %}
-                            <div class="send_to_proceed">
-                                <button type="button" class="btn btn-primary" name="{{ item.id }}">Оформить</button>
-                            </div>
-                        {% elif item.status == 'CNC' %}
-                            <p>Заказ отменен</p>
-                        {% else %}
-                            <p>Заказ в работе</p>
-                        {% endif %}
-                    </td>
-                    <td class="td1 orders_list">{{ item.pk }}</td>
-                    <td>{{ item.created|date:"Y-m-d H:i:s" }}</td>
-                    <td>{{ item.updated|date:"Y-m-d H:i:s" }}</td>
-                    <td>{{ item.get_status_display }}</td>
-                    <td>
-                        <a href="{% url 'orders:read' item.pk %}">
-                            Посмотреть
-                        </a>
-                    </td>
-                    <td>
-                        {% if item.status == 'FM' %}
-                            <a href="{% url 'orders:update' item.pk %}">
-                                Редактировать
-                            </a>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if item.status == 'FM' %}
-                            <a href="{% url 'orders:delete' item.pk %}">
-                                Удалить
-                            </a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-        </tbody>
-    </table>
-
+    <div id="list_all_orders">
+    {% include "ordersapp/includes/inc_orders_table.html" %}
+    </div>
     <div class="container" style="display: flex; justify-content: space-around;">
         <form style="flex-grow: 1; padding:  0 20px 0;" action="{% url 'index' %}">
             <button type="submit" class="btn btn-info form-control my-2 ">
@@ -80,5 +28,4 @@
             </button>
         </form>
     </div>
-
 {% endblock %}
