@@ -12,14 +12,13 @@
                 <h1 class="my-4">GeekShop</h1>
                 <div class="list-group">
                     <form action="{% url 'products:index' %}">
-                    <button style="width: 100%;" type="submit" class="btn btn-outline-info btn-lg my-2">
-                                <i class="fa fa-shopping-bag"></i> В каталог
-                            </button>
+                        <button style="width: 100%;" type="submit" class="btn btn-outline-info btn-lg my-2">
+                            <i class="fa fa-shopping-bag"></i> В каталог
+                        </button>
                     </form>
-{#                    <a href="{% url 'products:index' %}" class="list-group-item">Все</a>#}
-                <button onClick="javascript:history.go(-1);" type="submit" class="btn btn-outline-info btn-lg my-2">
-                                <i class="fa fa-undo"></i> Назад
-                            </button>
+                    <button onClick="javascript:history.go(-1);" type="submit" class="btn btn-outline-info btn-lg my-2">
+                        <i class="fa fa-undo"></i> Назад
+                    </button>
                 </div>
             </div>
 
@@ -28,21 +27,21 @@
                     <div class="card" style="width: 100%; font-size: 20px; text-align: justify;">
                         <div class="container" style="display: flex;">
                             <div style="width: 80%;" class="item">
-                        <img src="/media/{{ product.image }}" class="card-img-top" alt="...">
-                        </div>
+                                <img src="/media/{{ product.image }}" class="card-img-top" alt="...">
+                            </div>
                             <div class="item">
                                 <div class="card-body">
-                            <strong><p style="font-size: 24px;text-align:center;" class="card-title">
-                                {{ product.name }}</p></strong>
+                                    <strong><p style="font-size: 24px;text-align:center;" class="card-title">
+                                        {{ product.name }}</p></strong>
                                     <hr>
-                            <p class="card-text" style="text-indent: 30px;">{{ product.description }}</p>
-                        </div>
-                        <ul class="list-group list-group-flush" style="text-align:right;">
-                            <li class="list-group-item">{{ product.price }} руб</li>
-                            <li class="list-group-item">В наличии: {{ product.quantity }}</li>
-                        </ul>
+                                    <p class="card-text" style="text-indent: 30px;">{{ product.description }}</p>
                                 </div>
-                    </div>
+                                <ul class="list-group list-group-flush" style="text-align:right;">
+                                    <li class="list-group-item">{{ product.price }} руб</li>
+                                    <li class="list-group-item">В наличии: {{ product.quantity }}</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
