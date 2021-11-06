@@ -121,6 +121,12 @@ class OrderDetail(DetailView, BaseClassContextMixin):
                                'Кол-во, шт', 'Общая сумма, руб',]
         return context
 
+def order_forming_complete(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    order.status = Order.SEND_TO_PROCEED
+    order.save()
+    return  HttpResponseRedirect(reverse('orders:list'))
+
 
 def basket_clear(request):
     basket_items = Basket.objects.filter(user=request.user)
@@ -128,39 +134,7 @@ def basket_clear(request):
     return HttpResponseRedirect(reverse('orders:list'))
 
 
-def order_forming_complete(request, pk):
-    order = get_object_or_404(Order, pk=pk)
-    order.status = Order.SEND_TO_PROCEED
 
-    ''' Вот это мы потом перенесли в ?корзину? но не в этой вьюхе точно'''
-    items = order.get_items()
-    for item in items:
-        item.product.quantity -= item.quantity
-
-    if request.is_ajax():
-        # return JsonResponse({'price': product.price})
-        result = render_to_string('ordersapp/order_list.html', request=request)
-        return JsonResponse({'result': result})
-
-    order.save()
-    return HttpResponseRedirect(reverse('orders:list'))
-
-
-    # def post(self, request, *args, **kwargs):
-    #     basket_id = kwargs.pop('id', None)
-    #     quantity = kwargs.pop('quantity', None)
-    # if request.is_ajax():
-    #     basket = Basket.objects.get(id=basket_id)
-    #     if quantity > 0:
-    #         basket.quantity = quantity
-    #         basket.save()
-    #     else:
-    #         basket.delete()
-    #
-    #     result = render_to_string('baskets/baskets.html', request=request)
-    #
-    #     return JsonResponse({'result': result})
-    # return redirect(self)
 
 
 

@@ -87,18 +87,18 @@ window.onload = () => {
 
     $('.send_to_proceed').on('click', 'button[type="button"]', (e) => {
         let t_href = e.target;
-        console.log(t_href.name)
         $.ajax({
-            type: 'POST',
-            url: '/orders/forming_complete/' + t_href.name + '/',
-            success: (data) => {
-                if (data) {
-                    console.log(data.result)
-                    $('.text-center').html(data.result)
+                type: 'POST',
+                url: '/orders/forming_complete/' + t_href.name + '/',
+                success: (data) => {
+
+                    if (data) {
+                        $('#list_all_orders').html(data)
+                        console.log(data)
                 }
             },
         });
-        e.preventDefault();
+        // e.preventDefault();
     });
 
     $('#save_button').on('click', (e) => {
@@ -111,10 +111,10 @@ window.onload = () => {
         $( ".read_and_save" ).submit();
       e.preventDefault();
     });
-};
 
-
-
-setInterval(function() {
+    if ($("#random").length > 0){
+        setInterval(function() {
         document.getElementById("random").innerHTML = Math.floor
         (Math.random() * 2) + 1;}, 2000);
+    }
+};
