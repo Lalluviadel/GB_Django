@@ -14,21 +14,25 @@ function getCookie(name) {
     // console.log(cookieValue)
     return cookieValue;
 }
+
 const csrftoken = getCookie('csrftoken');
+
 // console.log(csrftoken)
 
 function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
+
 $.ajaxSetup({
-    beforeSend: function(xhr, settings) {
+    beforeSend: function (xhr, settings) {
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
     }
 });
 
-window.onload = () => {
+window.addEventListener('load', () => {
+// window.onload = () => {
     $('.product_add').on('click', 'button[type="button"]', (e) => {
         let t_href = e.target;
         let page_id = t_href.name;
@@ -80,14 +84,15 @@ window.onload = () => {
         e.preventDefault();
     });
 
-    $('.send_to_proceed').on('click', 'button[class="btn btn-primary"]', (e) => {
+    $('#list_all_orders').on('click', '#to_proceed_btn', (e) => {
         let t_href = e.target;
+        console.log(t_href.name)
         $.ajax({
-                url: '/orders/forming_complete/' + t_href.name + '/',
-                success: (data) => {
+            url: '/orders/forming_complete/' + t_href.name + '/',
+            success: (data) => {
 
-                    if (data) {
-                        $('#list_all_orders').html(data.result)
+                if (data) {
+                    $('#list_all_orders').html(data.result)
                 }
             },
         });
@@ -96,18 +101,19 @@ window.onload = () => {
 
     $('#save_button').on('click', (e) => {
         $.ajax({
-             type: 'GET',
-             url: '/orders/basket_clear/',
-             }).done(function(){
-            window.location.href="/orders/";
+            type: 'GET',
+            url: '/orders/basket_clear/',
+        }).done(function () {
+            window.location.href = "/orders/";
         })
-        $( ".read_and_save" ).submit();
-      e.preventDefault();
+        $(".read_and_save").submit();
+        e.preventDefault();
     });
 
-    if ($("#random").length > 0){
-        setInterval(function() {
-        document.getElementById("random").innerHTML = Math.floor
-        (Math.random() * 2) + 1;}, 2000);
+    if ($("#random").length > 0) {
+        setInterval(function () {
+            document.getElementById("random").innerHTML = Math.floor
+            (Math.random() * 2) + 1;
+        }, 2000);
     }
-};
+});

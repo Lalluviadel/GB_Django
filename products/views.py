@@ -9,7 +9,9 @@ def index(request):
     context = {
         'title': 'Geekshop',
     }
+    # return render(request, 'products/index.html')
     return render(request, 'products/index.html', context)
+
 
 def get_product(pk):
     # if settings.LOW_CACHE:
@@ -21,7 +23,8 @@ def get_product(pk):
     #     return product
     # else:
     #     return get_object_or_404(Product,pk=pk)
-    return get_object_or_404(Product,pk=pk)
+    return get_object_or_404(Product, pk=pk)
+
 
 class ProductsView(ListView):
     model = Product
@@ -38,6 +41,7 @@ class ProductsView(ListView):
             return Product.objects.filter(category_id=self.kwargs['category_id'])
         return Product.objects.all()
 
+
 class ModalWindow(ListView):
     model = Product
     template_name = 'products/modal.html'
@@ -53,12 +57,11 @@ class ModalWindow(ListView):
             return JsonResponse({'result': result})
         return redirect(self)
 
-class ProductDetail(DetailView):
 
+class ProductDetail(DetailView):
     model = Product
     template_name = 'products/product_detail.html'
     context_object_name = 'product'
-
 
     def get_context_data(self, category_id=None, *args, **kwargs):
         """Добавляем список категорий для вывода сайдбара с категориями на странице каталога"""
