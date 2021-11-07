@@ -42,7 +42,7 @@ class OrderCreate(CreateView):
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
-                    form.initial['price'] = basket_items[num].product.price
+                    form.initial['price'] = basket_items[num].product.price*basket_items[num].quantity
 
             else:
                 formset = OrderFormSet()
@@ -86,7 +86,7 @@ class OrderUpdate(UpdateView):
             formset = OrderFormSet(instance=self.object)
             for form in formset:
                 if form.instance.pk:
-                    form.initial['price'] = form.instance.product.price
+                    form.initial['price'] = form.instance.product.price *  form.initial['quantity']
 
         context['orderitems'] = formset
         return context
@@ -126,9 +126,6 @@ def order_forming_complete(request, pk):
     order.status = Order.SEND_TO_PROCEED
     order.save()
     if request.is_ajax():
-        # return  HttpResponseRedirect(reverse('orders:list'))
-        # return render(request, "ordersapp/order_list.html")
-        # queryset = Order.objects.filter(user=request.user, is_active=True)
         result = render_to_string('ordersapp/includes/inc_orders_table.html', request=request)
         return JsonResponse({'result': result})
 
