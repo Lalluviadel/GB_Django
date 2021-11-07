@@ -1,11 +1,11 @@
 window.addEventListener('load', () => {
-
     let _quantity, _price, orderitem_num, delta_quantity, orderitem_quantity, delta_cost;
 
     let quantity_arr = []
     let price_arr = []
 
     let total_forms = parseInt($('input[name=orderitems-TOTAL_FORMS]').val())
+    // console.log(total_forms)
 
 
     let order_total_quantity = parseInt($('.order_total_quantity').text()) || 0;
@@ -13,10 +13,9 @@ window.addEventListener('load', () => {
 
 
     for (let i = 0; i < total_forms; i++) {
-        _quantity = parseInt($('input[name=orderitems-' + i + '-quantity]').val());
-        _price = parseInt($('.orderitems-' + i + '-price').text().replace(',' , '.'));
+        _quantity = parseInt($('input[name=orderitems-' + i + '-quantity').val());
+        _price = parseInt($('.orderitems-' + i + '-price').text().replace(',', '.'));
 
-        // console.log(_quantity)
         // console.log(_price)
         quantity_arr[i] = _quantity
         if (_price) {
@@ -27,47 +26,52 @@ window.addEventListener('load', () => {
         }
     }
 
-    $('.order_form').on('click', 'input[type=number]', (e) => {
-        let target = e.target;
-        console.log(123)
-        orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-quantity', ''));
-        console.log(price_arr[orderitem_num])
-        if (price_arr[orderitem_num]) {
-            console.log(123123)
-            orderitem_quantity = parseInt(target.value)
+    // console.info('PRICE',price_arr)
+    // console.info('QUANTITY',quantity_arr)
 
+
+    $('.order_form').on('click', 'input[type=number]', function () {
+        let target = event.target;
+        orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-quantity', ''));
+        if (price_arr[orderitem_num]) {
+            orderitem_quantity = parseInt(target.value)
             delta_quantity = orderitem_quantity - quantity_arr[orderitem_num];
             quantity_arr[orderitem_num] = orderitem_quantity;
-            orderSummerUpdate(price_arr[orderitem_num], delta_quantity)
+
+            price_obj = '.orderitems-' + orderitem_num.toString() + '-price';
+            cost = orderitem_quantity * price_arr[orderitem_num]
+            $(price_obj).html(cost.toString() + ',00 руб.');
+
+            orderSummerUpdate(price_arr[orderitem_num], delta_quantity, price_obj)
         }
     });
 
-
-    $('.order_form').on('click', 'input[type=checkbox]', (e) => {
-        let target = e.target;
+    $('.order_form').on('click', 'input[type=checkbox]', function () {
+        let target = event.target;
         orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-DELETE', ''));
         if (target.checked) {
             delta_quantity = -quantity_arr[orderitem_num];
-        }else{
+        } else {
             delta_quantity = quantity_arr[orderitem_num];
         }
-         orderSummerUpdate(price_arr[orderitem_num], delta_quantity)
+        orderSummerUpdate(price_arr[orderitem_num], delta_quantity)
     });
 
 
     $('.formset_row').formset({
-        addText: 'добавить продукт',
-        deleteText: 'удалить',
+        addText: '<i class="fa fa-plus"></i> Добавить продукт',
+        deleteText: '<i class="fa fa-trash"></i> удалить',
         prefix: 'orderitems',
         removed: deleteOrderItem,
     });
 
-    function  deleteOrderItem(row) {
+    function deleteOrderItem(row) {
         let target_name = row[0].querySelector('input[type="number"]').name;
         orderitem_num = parseInt(target_name.replace('orderitems-', '').replace('-quantity', ''));
         delta_quantity = -quantity_arr[orderitem_num];
         orderSummerUpdate(price_arr[orderitem_num], delta_quantity)
     }
+
 
     function orderSummerUpdate(orderitem_price, delta_quantity) {
         delta_cost = orderitem_price * delta_quantity
@@ -77,25 +81,24 @@ window.addEventListener('load', () => {
         $('.order_total_cost').html(order_total_price.toString() + ',00');
     }
 
-    $(document).on('change', '.order_form select', (e) => {
+    $(document).on('change', '.order_form select', function () {
 
-        let target = e.target;
+        let target = event.target;
         orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-product', ''));
-        console.log(orderitem_num)
-        console.log(quantity_arr[orderitem_num])
         let orderitem_product_pk = target.options[target.selectedIndex].value;
 
         if (orderitem_product_pk) {
             $.ajax({
-                url: '/orders/product/' + orderitem_product_pk + '/' + quantity_arr[orderitem_num] + '/price/',
+                url: '/orders/product/' + orderitem_product_pk + '/price/',
                 success: function (data) {
                     if (data.price) {
                         price_arr[orderitem_num] = parseFloat(data.price)
                         if (isNaN(quantity_arr[orderitem_num])) {
                             quantity_arr[orderitem_num] = 0;
                         }
-                        let price_html = '<span class="orderitems-' + orderitem_num + '-price">' +
-                            data.price.toString().replace('.', ',') + '</span> руб';
+                        // let price_html = '<span class="orderitems-' + orderitem_num + '-price">' + data.price.toString().replace('.', ',') + ' руб' + '</span> ';
+
+                        let price_html = '<span class="orderitems-' + orderitem_num + '-price">'  + '0 руб' + '</span> ';
                         let current_tr = $('.order_form table').find('tr:eq(' + (orderitem_num + 1) + ')');
                         current_tr.find('td:eq(2)').html(price_html);
                     }
@@ -104,4 +107,5 @@ window.addEventListener('load', () => {
             });
         }
     });
+
 });

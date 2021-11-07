@@ -13,6 +13,8 @@ urlpatterns = [
 
     path('basket_clear/', basket_clear, name='basket_clear'),
 
-    path('product/<int:pk>/<int:qua>/price/', get_product_price, name='product_price'),
+    path('product/<int:pk>/price/', get_product_price, name='product_price'),
+
+    # path('product/<int:pk>/<int:qua>/price/', get_product_price, name='product_price'),
     # path('payment/result/', payment_result, name='payment_result'),
 ]
