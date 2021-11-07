@@ -29,9 +29,13 @@ window.addEventListener('load', () => {
 
     $('.order_form').on('click', 'input[type=number]', (e) => {
         let target = e.target;
+        console.log(123)
         orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-quantity', ''));
+        console.log(price_arr[orderitem_num])
         if (price_arr[orderitem_num]) {
+            console.log(123123)
             orderitem_quantity = parseInt(target.value)
+
             delta_quantity = orderitem_quantity - quantity_arr[orderitem_num];
             quantity_arr[orderitem_num] = orderitem_quantity;
             orderSummerUpdate(price_arr[orderitem_num], delta_quantity)
@@ -77,18 +81,21 @@ window.addEventListener('load', () => {
 
         let target = e.target;
         orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-product', ''));
+        console.log(orderitem_num)
+        console.log(quantity_arr[orderitem_num])
         let orderitem_product_pk = target.options[target.selectedIndex].value;
 
         if (orderitem_product_pk) {
             $.ajax({
-                url: '/orders/product/' + orderitem_product_pk + '/price/',
+                url: '/orders/product/' + orderitem_product_pk + '/' + quantity_arr[orderitem_num] + '/price/',
                 success: function (data) {
                     if (data.price) {
                         price_arr[orderitem_num] = parseFloat(data.price)
                         if (isNaN(quantity_arr[orderitem_num])) {
                             quantity_arr[orderitem_num] = 0;
                         }
-                        let price_html = '<span class="orderitems-' + orderitem_num + '-price">' + data.price.toString().replace('.', ',') + '</span> руб';
+                        let price_html = '<span class="orderitems-' + orderitem_num + '-price">' +
+                            data.price.toString().replace('.', ',') + '</span> руб';
                         let current_tr = $('.order_form table').find('tr:eq(' + (orderitem_num + 1) + ')');
                         current_tr.find('td:eq(2)').html(price_html);
                     }

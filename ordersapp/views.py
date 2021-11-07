@@ -141,10 +141,6 @@ def basket_clear(request):
     return HttpResponseRedirect(reverse('orders:list'))
 
 
-
-
-
-
 # Для приделывания робокассы:
 # def payment_result(request):
 #     status = request.GET.get('ik_inv_st')
@@ -156,10 +152,10 @@ def basket_clear(request):
 #     return HttpResponseRedirect(reverse('orders:list'))
 
 
-# Подтягивание цены в заказы через аджакс
-# def get_product_price(request, pk):
-#     if request.is_ajax():
-#         product = Product.objects.get(pk=pk)
-#         if product:
-#             return JsonResponse({'price': product.price})
-#         return JsonResponse({'price': 0})
+# Подтягивание цены в заказы через ajax
+def get_product_price(request, pk, qua):
+    if request.is_ajax():
+        product = Product.objects.get(pk=pk)
+        if product and qua > 0:
+                return JsonResponse({'price': product.price})
+        return JsonResponse({'price': 0})
