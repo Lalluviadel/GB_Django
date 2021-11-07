@@ -1,12 +1,16 @@
-{% if object.status == 'FM' %}
-    <div class="container">
-        <input class="btn btn-info form-control my-2 btn-lg" type="button" onclick="window.location.href = '{% url 'orders:forming_complete' object.pk %}';" value="Оформить">
-        <input class="btn btn-info form-control my-2 btn-lg" type="button" onclick="window.location.href = '{% url 'orders:delete' object.pk %}';" value="Удалить">
-    </div>
-{% endif %}
-<div class="container">
-    <input class="btn btn-info form-control my-2 btn-lg" type="button" onclick="window.location.href =
-            {% url 'orders:list' %};" value="К списку заказов">
-    <input class="btn btn-info form-control my-2 btn-lg" type="button" onclick="window.location.href =
-            {% url 'products:index' %};" value="В каталог">
+<div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+    {% if object.status == 'FM' %}
+{#        <div class="container">#}
+            <input class="btn btn-info form-control my-2 btn-lg" type="button"
+                   onclick="window.location.href = '{% url 'orders:forming_complete' object.pk %}';" value="Оформить">
+            <input class="btn btn-info form-control my-2 btn-lg" type="button"
+                   onclick="window.location.href = '{% url 'orders:delete' object.pk %}';" value="Удалить">
+{#        </div>#}
+    {% endif %}
+{#    <div class="container">#}
+        <input class="btn btn-info form-control my-2 btn-lg" type="button" onclick="window.location.href =
+                {% url 'orders:list' %};" value="К списку заказов">
+        <input class="btn btn-info form-control my-2 btn-lg" type="button" onclick="window.location.href =
+                {% url 'products:index' %};" value="В каталог">
+{#    </div>#}
 </div>
