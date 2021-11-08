@@ -26,22 +26,8 @@ class BasketCreateView(CreateView, UserDispatchMixin):
             basket.quantity += 1
             basket.save()
 
-
-        # paginator = Paginator(Product.objects.filter(), per_page=3)
-        # try:
-        #     products_paginator = paginator.page(1)
-        # except PageNotAnInteger:
-        #     products_paginator = paginator.page(1)
-        # except EmptyPage:
-        #     products_paginator = paginator.page(paginator.num_pages)
-
-        # context = {
-            # 'products': products_paginator,
-        # }
-
         context = super().get_context_data(**kwargs)
         context.update({'products': Product.objects.all()})
-        # result = render_to_string('include/product_items.html', request=request)
         result = render_to_string('include/product_items.html', context, request=request)
         return JsonResponse({'result': result})
 

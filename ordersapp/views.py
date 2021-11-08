@@ -135,7 +135,10 @@ def order_forming_complete(request, pk):
 def basket_clear(request):
     basket_items = Basket.objects.filter(user=request.user)
     basket_items.delete()
-    return HttpResponseRedirect(reverse('orders:list'))
+    if request.is_ajax():
+        result = render_to_string('baskets/baskets.html')
+        return JsonResponse({'result': result})
+    return HttpResponseRedirect(reverse('users:profile'))
 
 
 # Для приделывания робокассы:
@@ -147,15 +150,6 @@ def basket_clear(request):
 #         order_item.status = Order.PAID
 #         order_item.save()
 #     return HttpResponseRedirect(reverse('orders:list'))
-
-
-# Подтягивание цены в заказы через ajax
-# def get_product_price(request, pk, qua):
-#     if request.is_ajax():
-#         product = Product.objects.get(pk=pk)
-#         if product and qua > 0:
-#                 return JsonResponse({'price': product.price})
-#         return JsonResponse({'price': 0})
 
 def get_product_price(request,pk):
     if request.is_ajax():

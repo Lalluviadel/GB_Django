@@ -86,11 +86,10 @@ window.addEventListener('load', () => {
 
     $('#list_all_orders').on('click', '#to_proceed_btn', (e) => {
         let t_href = e.target;
-        console.log(t_href.name)
+        // console.log(t_href.name)
         $.ajax({
             url: '/orders/forming_complete/' + t_href.name + '/',
             success: (data) => {
-
                 if (data) {
                     $('#list_all_orders').html(data.result)
                 }
@@ -107,6 +106,18 @@ window.addEventListener('load', () => {
             window.location.href = "/orders/";
         })
         $(".read_and_save").submit();
+        e.preventDefault();
+    });
+
+    $('#basket_catcher').on('click', '#clear_basket', (e) => {
+        $.ajax({
+            url: '/orders/basket_clear/',
+            success: (data) => {
+                if (data) {
+                    $('.basket_list').html(data.result)
+                }
+            },
+        });
         e.preventDefault();
     });
 
