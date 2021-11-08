@@ -1,3 +1,4 @@
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
@@ -36,10 +37,10 @@ class ProductsView(ListView):
         context['title'] = 'Каталог'
         return context
 
-    def get_queryset(self):
-        if self.kwargs.keys():
-            return Product.objects.filter(category_id=self.kwargs['category_id'])
-        return Product.objects.all()
+    # def get_queryset(self):
+    #     if self.kwargs.keys():
+    #         return Product.objects.filter(category_id=self.kwargs['category_id'])
+    #     return Product.objects.all()
 
 
 class ModalWindow(ListView):
@@ -52,7 +53,7 @@ class ModalWindow(ListView):
         if request.is_ajax():
             m_product = Product.objects.get(id=product_id)
             context['m_product'] = m_product
-            result = render_to_string('products/modal.html', context, request=request)
+            result = render_to_string('products/modal.html', context)
 
             return JsonResponse({'result': result})
         return redirect(self)
@@ -70,3 +71,13 @@ class ProductDetail(DetailView):
         context['product'] = get_product(self.kwargs.get('pk'))
         context['categories'] = ProductCategory.objects.all()
         return context
+
+def paginate_me(queryset, num):
+    paginator = Paginator(queryset, per_page=3)
+    try:
+        products_paginator = paginator.page(num)
+    except PageNotAnInteger:
+        products_paginator = paginator.page(1)
+    except EmptyPage:
+        products_paginator = paginator.page(paginator.num_pages)
+    return products_paginator

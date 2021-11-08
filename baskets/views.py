@@ -26,9 +26,17 @@ class BasketCreateView(CreateView, UserDispatchMixin):
             basket.quantity += 1
             basket.save()
 
-        context = super().get_context_data(**kwargs)
-        context.update({'products': Product.objects.all()})
-        result = render_to_string('include/product_items.html', context, request=request)
+        request.GET = request.GET.copy()
+
+        source_page = request.POST['current_page']
+        _cat = source_page.split('category')
+        _page = source_page.split('page=')
+        if len(_cat) > 1:
+            request.GET['category_id'] = _cat[1].split('/')[1]
+        if len(_page) > 1:
+            request.GET['page'] = int(_page[1])
+
+        result = render_to_string('include/product_items.html', request=request)
         return JsonResponse({'result': result})
 
 

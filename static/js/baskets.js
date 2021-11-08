@@ -33,14 +33,16 @@ $.ajaxSetup({
 
 window.addEventListener('load', () => {
 // window.onload = () => {
-    $('.product_add').on('click', 'button[type="button"]', (e) => {
+    $('.product_catcher').on('click', 'button[type="button"]', (e) => {
         let t_href = e.target;
         let page_id = t_href.name;
         $.ajax({
             type: 'POST',
-            headers: {'X-CSRF-TOKEN': csrftoken}, // этот работает наконец
+            headers: {'X-CSRF-TOKEN': csrftoken},
             url: '/baskets/add/' + t_href.name + '/',
-            data: {'page_id': page_id},
+            data: {'page_id': page_id,
+                'current_page': window.location.href
+            },
             success: (data) => {
                 if (data) {
                     $('.product_items').html(data.result)
@@ -50,7 +52,6 @@ window.addEventListener('load', () => {
                 console.log(error);
             }
         });
-        // console.log(page_id)
         e.preventDefault();
     });
 

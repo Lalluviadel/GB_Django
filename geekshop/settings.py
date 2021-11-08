@@ -82,6 +82,7 @@ TEMPLATES = [
                 'products.context_processors.basket',
                 'products.context_processors.categories',
                 'products.context_processors.orders',
+                'products.context_processors.product_set',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
             ],
