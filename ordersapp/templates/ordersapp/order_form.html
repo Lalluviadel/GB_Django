@@ -1,7 +1,6 @@
 {% extends "products/base.html" %}
 {% load static %}
 {#{% load cache %}#}
-
 {% block content %}
     <div style="display: flex; flex-direction: row;">
         {% include 'ordersapp/includes/inc_order_summary.html' %}
@@ -57,12 +56,12 @@
                 {% endfor %}
             </table>
             <div class="container">
-                <button type="submit" id="save_button" name="bas_clear" value="Cохранить" class="btn btn-info form-control my-2 btn-lg">
+                <button type="submit" id="save_button" name="bas_clear" value="Cохранить"
+                        class="btn btn-info form-control my-2 btn-lg">
                     <i class="fa fa-check"></i> Cохранить
                 </button>
             </div>
 
         </form>
     </div>
-
 {% endblock %}

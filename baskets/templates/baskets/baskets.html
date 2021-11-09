@@ -2,8 +2,8 @@
 
 <div class="basket_list">
     {% if baskets %}
-            <h4 class="mt-3 mb-3 d-flex justify-content-between align-items-center mb-3">
-                Корзина
+        <h4 class="mt-3 mb-3 d-flex justify-content-between align-items-center mb-3">
+            Корзина
             <input id="clear_basket" style="margin: 5px;" class="btn btn-info my-2 btn-lg" type="button"
                    value="Очистить корзину">
             <span class="badge badge-secondary badge-pill">{{ variable|total_quantity:user }}</span></h4>
@@ -23,9 +23,6 @@
                             <div class="col-lg-4">{{ basket.sum }} руб.</div>
                             <div class="col-lg-4">
                                 <form action="{% url 'baskets:basket_remove' basket.id %}" method="post">
-
-                                    {#                                    {% csrf_token %}#}
-
                                     <button class="btn btn-danger" type="submit">
                                         <i class="fas fa-trash"></i> Удалить
                                     </button>
@@ -47,7 +44,20 @@
             <a href="{% url 'orders:create' %}" style="color: white">
                 Оформить
             </a></button>
+        <button type="button" class="btn btn-info btn-lg float-left">
+            <a href="{% url 'products:index' %}" style="color: white">
+                <i class="fa fa-shopping-bag"></i> В каталог
+            </a></button>
     {% else %}
-        <h4 class="mt-3 mb-3 text-center">Корзина пуста</h4>
+        <div style="display: flex; flex-direction: column; align-items: center;
+        justify-content: center; height: 100%;">
+            <h4 style=" width: 400px; padding: 15px;"
+                class="mt-3 mb-3 text-center">Корзина пуста</h4>
+            <button style=" width: 400px; padding: 15px;" type="button"
+                    class="btn btn-info btn-lg">
+                <a href="{% url 'products:index' %}" style="color: white">
+                    <i class="fa fa-shopping-bag"></i> В каталог
+                </a></button>
+        </div>
     {% endif %}
 </div>

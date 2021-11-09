@@ -4,9 +4,10 @@ from django.views.generic.base import View, ContextMixin
 
 
 class CustomDispatchMixin(View):
-    @method_decorator(user_passes_test(lambda u:u.is_superuser))
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+
 
 class BaseClassContextMixin(ContextMixin):
     title = ''
@@ -16,7 +17,8 @@ class BaseClassContextMixin(ContextMixin):
         context['title'] = self.title
         return context
 
+
 class UserDispatchMixin(View):
-    @method_decorator(user_passes_test(lambda u:u.is_authenticated))
+    @method_decorator(user_passes_test(lambda u: u.is_authenticated))
     def dispatch(self, request, *args, **kwargs):
-        return super(UserDispatchMixin,self).dispatch(request, *args, **kwargs)
+        return super(UserDispatchMixin, self).dispatch(request, *args, **kwargs)

@@ -1,17 +1,14 @@
 from django.db import transaction
-from django.db.models import signals
-from django.db.models.signals import pre_delete
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
-
 from baskets.models import Basket
 from geekshop.mixin import BaseClassContextMixin
 from ordersapp.forms import OrderItemsForm
-from ordersapp.models import Order, OrderItem, product_quantity_delete
+from ordersapp.models import Order, OrderItem
 from products.models import Product
 
 
@@ -44,7 +41,7 @@ class OrderCreate(CreateView):
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
-                    form.initial['price'] = basket_items[num].product.price*basket_items[num].quantity
+                    form.initial['price'] = basket_items[num].product.price * basket_items[num].quantity
 
             else:
                 formset = OrderFormSet()
@@ -88,7 +85,7 @@ class OrderUpdate(UpdateView):
             formset = OrderFormSet(instance=self.object)
             for form in formset:
                 if form.instance.pk:
-                    form.initial['price'] = form.instance.product.price *  form.initial['quantity']
+                    form.initial['price'] = form.instance.product.price * form.initial['quantity']
 
         context['orderitems'] = formset
         return context
@@ -109,9 +106,11 @@ class OrderUpdate(UpdateView):
 
         return super().form_valid(form)
 
+
 class OrderDelete(DeleteView):
     model = Order
     success_url = reverse_lazy('orders:list')
+
 
 class OrderDetail(DetailView, BaseClassContextMixin):
     model = Order
@@ -120,8 +119,9 @@ class OrderDetail(DetailView, BaseClassContextMixin):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['headings'] = ['', 'Категория', 'Товар', 'Цена, руб/шт',
-                               'Кол-во, шт', 'Общая сумма, руб',]
+                               'Кол-во, шт', 'Общая сумма, руб', ]
         return context
+
 
 def order_forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
@@ -131,7 +131,7 @@ def order_forming_complete(request, pk):
         result = render_to_string('ordersapp/includes/inc_orders_table.html', request=request)
         return JsonResponse({'result': result})
 
-    return  HttpResponseRedirect(reverse('orders:list'))
+    return HttpResponseRedirect(reverse('orders:list'))
 
 
 def basket_clear(request):
@@ -154,10 +154,10 @@ def basket_clear(request):
 #         order_item.save()
 #     return HttpResponseRedirect(reverse('orders:list'))
 
-def get_product_price(request,pk):
+def get_product_price(request, pk):
     if request.is_ajax():
         product = Product.objects.get(pk=pk)
         if product:
-            return JsonResponse({'price':product.price})
+            return JsonResponse({'price': product.price})
 
     return JsonResponse({'price': 0})

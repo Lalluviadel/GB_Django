@@ -21,7 +21,6 @@
                     </button>
                 </div>
             </div>
-
             <div class="col-lg-9">
                 <div class="row my-5">
                     <div class="card" style="width: 100%; font-size: 20px; text-align: justify;">
@@ -35,6 +34,9 @@
                                         {{ product.name }}</p></strong>
                                     <hr>
                                     <p class="card-text" style="text-indent: 30px;">{{ product.description }}</p>
+                                    <hr>
+                                    <p class="card-text"
+                                       style="color:darkcyan; text-indent: 20px; font-size: 18px;">{{ product.category.description }}</p>
                                 </div>
                                 <ul class="list-group list-group-flush" style="text-align:right;">
                                     <li class="list-group-item">{{ product.price }} руб</li>

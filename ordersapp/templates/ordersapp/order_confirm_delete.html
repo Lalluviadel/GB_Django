@@ -1,6 +1,5 @@
 {% extends 'products/base.html' %}
 {% load static %}
-
 {% block content %}
     <div class="text-center" style="padding: 40px">
         {% include 'ordersapp/includes/inc_order_summary.html' %}
@@ -14,7 +13,6 @@
                 <input class="btn btn-info form-control my-2 btn-lg" type="button" onclick="window.location.href =
                         {% url 'orders:list' %};" value="Отмена">
             </div>
-
         </div>
     </div>
 {% endblock %}

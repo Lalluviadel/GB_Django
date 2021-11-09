@@ -10,7 +10,6 @@ def index(request):
     context = {
         'title': 'Geekshop',
     }
-    # return render(request, 'products/index.html')
     return render(request, 'products/index.html', context)
 
 
@@ -65,12 +64,11 @@ class ProductDetail(DetailView):
     context_object_name = 'product'
 
     def get_context_data(self, category_id=None, *args, **kwargs):
-        """Добавляем список категорий для вывода сайдбара с категориями на странице каталога"""
         context = super().get_context_data()
-
         context['product'] = get_product(self.kwargs.get('pk'))
         context['categories'] = ProductCategory.objects.all()
         return context
+
 
 def paginate_me(queryset, num):
     paginator = Paginator(queryset, per_page=3)

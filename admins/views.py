@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, CategoryProductsForm, ProductsForm
+from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, \
+    CategoryProductsForm, ProductsForm
 from geekshop.mixin import CustomDispatchMixin
 from products.models import ProductCategory, Product
 from users.models import User
@@ -57,7 +58,7 @@ class UserDeleteView(DeleteView):
 
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, request, *args, **kwargs):
-        return super(UserDeleteView, self).dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()

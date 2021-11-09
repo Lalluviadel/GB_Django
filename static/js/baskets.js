@@ -11,13 +11,11 @@ function getCookie(name) {
             }
         }
     }
-    // console.log(cookieValue)
     return cookieValue;
 }
 
 const csrftoken = getCookie('csrftoken');
 
-// console.log(csrftoken)
 
 function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -39,7 +37,8 @@ window.addEventListener('load', () => {
             type: 'POST',
             headers: {'X-CSRF-TOKEN': csrftoken},
             url: '/baskets/add/' + t_href.name + '/',
-            data: {'page_id': page_id,
+            data: {
+                'page_id': page_id,
                 'current_page': window.location.href
             },
             success: (data) => {
@@ -70,7 +69,6 @@ window.addEventListener('load', () => {
     $('.modal_catcher').on('click', 'button[type="button"]', (e) => {
         let t_href = e.currentTarget;
         let product_id = t_href.name;
-        console.log(t_href)
         $.ajax({
             url: '/products/modal/' + product_id + '/',
             success: (data) => {

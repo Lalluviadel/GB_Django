@@ -15,7 +15,6 @@ class BasketCreateView(CreateView, UserDispatchMixin):
     fields = ['product']
     success_url = reverse_lazy('products:index')
 
-
     def post(self, request, *args, **kwargs):
         product = self.get_object(Product.objects.filter())
         baskets = Basket.objects.filter(user=request.user, product=product)

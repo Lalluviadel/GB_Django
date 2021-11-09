@@ -21,8 +21,11 @@
     {% else %}
         <div style="padding: 28px"></div>
         <div style=" color: darkcyan; background: #E0FFFF; padding: 20px" class="h3">Новый заказ</div>
-        <div style="padding: 20px"><i style="color: darkcyan;" class="fa fa-exclamation-circle"></i> Обработка заказа может занимать до 3 рабочих дней в зависимости от загруженности склада</div>
-        <div style="padding: 20px" class="h5">Заказчик: <strong>{{ user.last_name }} {{ user.first_name }}</strong></div>
+        <div style="padding: 20px"><i style="color: darkcyan;" class="fa fa-exclamation-circle"></i> Обработка заказа
+            может занимать до 3 рабочих дней в зависимости от загруженности склада
+        </div>
+        <div style="padding: 20px" class="h5">Заказчик: <strong>{{ user.last_name }} {{ user.first_name }}</strong>
+        </div>
         {% if basket.0 %}
             <div style="background: #E0FFFF; padding: 20px">
                 <div class="h5">
@@ -36,5 +39,4 @@
             </div>
         {% endif %}
     {% endif %}
-    {#<hr>#}
 </div>

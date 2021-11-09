@@ -11,7 +11,8 @@ class UserAdminRegisterForm(UserRegisterForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'image',)
+        fields = ('username', 'email', 'first_name', 'last_name',
+                  'password1', 'password2', 'image',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -30,7 +31,6 @@ class UserAdminProfileForm(UserProfileForm):
 
 
 class CategoryProductsForm(ModelForm):
-
     class Meta:
         model = ProductCategory
         fields = ['name', 'description']

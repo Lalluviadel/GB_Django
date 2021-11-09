@@ -29,6 +29,7 @@ def orders(request):
             'orders': ''
         }
 
+
 def product_set(request, current_category=None):
     page = request.GET.get('page')
     if 'category_id' in request.resolver_match.kwargs:
@@ -46,5 +47,5 @@ def product_set(request, current_category=None):
         queryset = Product.objects.all()
         product_set = products.views.paginate_me(queryset, page)
         return {
-            'product_set':product_set
+            'product_set': product_set
         }

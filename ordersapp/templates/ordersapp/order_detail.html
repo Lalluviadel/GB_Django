@@ -1,6 +1,5 @@
 {% extends "products/base.html" %}
 {% load static %}
-
 {% block content %}
     <link rel="stylesheet" href="{% static '/css/products.css' %}" type="text/css">
     <div class="quantity_catcher" style="display: flex; flex-direction: row;">
@@ -22,15 +21,12 @@
                 <tr style="border: 1px solid darkcyan; background: #E0FFFF; cursor: pointer;"
                     onmouseover="this.style.backgroundColor='#AFEEEE';"
                     onmouseout="this.style.backgroundColor='#E0FFFF';">
-
                     <td style="border: 1px solid darkcyan;  padding: 20px">
                         <img style="height: 150px" src="{{ item.product.image.url }}"
                              alt="{{ item.product.short_desc }}"></td>
-
                     <td style="border: 1px solid darkcyan;  padding: 20px">
                         <span class="category_name">{{ item.product.category.name }}</span>
                     </td>
-
                     <td style="border: 1px solid darkcyan;  padding: 20px; position: relative">
                         <span class="product_name">{{ item.product.name }}</span>
                         <form action="{% url 'products:detail' item.product.id %}">
@@ -41,14 +37,12 @@
                             </button>
                         </form>
                     </td>
-
                     <td style="border: 1px solid darkcyan;  padding: 20px">
                         <span class="product_price">{{ item.product.price }}</span></td>
 
                     <td style="border: 1px solid darkcyan;  padding: 20px">
                         <span class="product_quantitiy">
                             {{ item.quantity }}</span></td>
-
                     <td style="border: 1px solid darkcyan;  padding: 20px">
                         <span class="product_cost">
                             {{ item.get_product_cost }}</span></td>
@@ -57,5 +51,4 @@
             </tbody>
         </table>
     </div>
-
 {% endblock %}

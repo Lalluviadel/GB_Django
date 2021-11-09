@@ -1,7 +1,5 @@
 {% extends 'products/base.html' %}
 {% load static %}
-
-
 {% block content %}
     <div class="text-center" style="padding-top: 70px;">
         <div style="color: darkcyan; background: #E0FFFF; padding: 20px" class="h2 text-center head">
@@ -14,7 +12,7 @@
         </div>
     </div>
     <div id="list_all_orders">
-    {% include "ordersapp/includes/inc_orders_table.html" %}
+        {% include "ordersapp/includes/inc_orders_table.html" %}
     </div>
     <div class="container" style="display: flex; justify-content: space-around;">
         <form style="flex-grow: 1; padding:  0 20px 0;" action="{% url 'index' %}">

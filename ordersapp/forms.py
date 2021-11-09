@@ -20,7 +20,6 @@ class OrderItemsForm(forms.ModelForm):
         model = OrderItem
         exclude = ()
 
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Проверить, полезен или вреден

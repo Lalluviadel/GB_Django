@@ -34,7 +34,6 @@ class RegisterListView(FormView, BaseClassContextMixin):
                                           f'ссылкой для активации аккаунта {user.username}')
             return redirect(self.success_url)
         messages.warning(request, f'{form.errors}')
-
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -55,7 +54,7 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
 
     def post(self, request, *args, **kwargs):
         form = UserProfileForm(data=request.POST, files=request.FILES, instance=request.user)
-        form_edit = UserProfileEditForm(data=request.POST,instance=request.user.userprofile)
+        form_edit = UserProfileEditForm(data=request.POST, instance=request.user.userprofile)
         if form.is_valid() and form_edit.is_valid():
             form.save()
             return redirect(self.success_url)
