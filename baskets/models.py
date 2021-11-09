@@ -25,3 +25,7 @@ class Basket(models.Model):
     def total_sum(user):
         basket_query_set = Basket.objects.filter(user=user)
         return sum(basket.sum() for basket in basket_query_set)
+
+    @staticmethod
+    def get_item(pk):
+        return Basket.objects.get(pk=pk).quantity

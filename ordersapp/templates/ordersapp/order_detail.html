@@ -3,7 +3,7 @@
 
 {% block content %}
     <link rel="stylesheet" href="{% static '/css/products.css' %}" type="text/css">
-    <div style="display: flex; flex-direction: row;">
+    <div class="quantity_catcher" style="display: flex; flex-direction: row;">
         {% include 'ordersapp/includes/inc_order_summary.html' %}
         {% include 'ordersapp/includes/inc_order_actions.html' %}
     </div>

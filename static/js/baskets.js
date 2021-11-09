@@ -67,9 +67,10 @@ window.addEventListener('load', () => {
         e.preventDefault();
     });
 
-    $('.product_view').on('click', 'button[type="button"]', (e) => {
-        let t_href = e.target;
+    $('.modal_catcher').on('click', 'button[type="button"]', (e) => {
+        let t_href = e.currentTarget;
         let product_id = t_href.name;
+        console.log(t_href)
         $.ajax({
             url: '/products/modal/' + product_id + '/',
             success: (data) => {
@@ -83,7 +84,6 @@ window.addEventListener('load', () => {
 
     $('#list_all_orders').on('click', '#to_proceed_btn', (e) => {
         let t_href = e.target;
-        // console.log(t_href.name)
         $.ajax({
             url: '/orders/forming_complete/' + t_href.name + '/',
             success: (data) => {
@@ -96,12 +96,8 @@ window.addEventListener('load', () => {
     });
 
     $('#save_button').on('click', (e) => {
-        let flag = e.target.name
         $.ajax({
-            type: 'GET',
             url: '/orders/basket_clear/',
-            data: {'flag': flag,
-            },
         }).done(function () {
             window.location.href = "/orders/";
         })

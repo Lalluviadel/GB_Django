@@ -136,12 +136,7 @@ def order_forming_complete(request, pk):
 
 def basket_clear(request):
     basket_items = Basket.objects.filter(user=request.user)
-    if 'flag' in request.GET:
-        pre_delete.disconnect(receiver=product_quantity_delete, sender=Basket)
-        basket_items.delete()
-        pre_delete.connect(receiver=product_quantity_delete, sender=Basket)
-    else:
-        basket_items.delete()
+    basket_items.delete()
 
     if request.is_ajax():
         result = render_to_string('baskets/baskets.html')
