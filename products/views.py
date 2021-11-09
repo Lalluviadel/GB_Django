@@ -53,7 +53,7 @@ class ModalWindow(ListView):
         if request.is_ajax():
             m_product = Product.objects.get(id=product_id)
             context['m_product'] = m_product
-            result = render_to_string('products/modal.html', context)
+            result = render_to_string('products/modal.html', context, request=request)
 
             return JsonResponse({'result': result})
         return redirect(self)

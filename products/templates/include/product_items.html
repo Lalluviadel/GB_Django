@@ -15,9 +15,11 @@
                         <h5>{{ product.price }} руб.</h5>
                         <p class="card-text">{{ product.description }}</p>
                     </div>
+                {% if user.is_authenticated %}
                     <div>
                         <p style="text-align: center;" class="card-text">В наличии {{ product.quantity }} шт.</p>
                     </div>
+
                     {% if product.quantity > 0 %}
                         <div class="product_add">
                             <div class="card-footer text-center">
@@ -31,18 +33,17 @@
                             <p style="color:darkcyan;"><b>Ожидается поступление</b></p>
                         </div>
                     {% endif %}
+{% endif %}
 
-                    {% if user.is_authenticated %}
                         <div class="product_view">
                             <div class="card-footer text-center">
                                 <button type="button" class="btn btn-outline-info" name="{{ product.id }}"
                                         data-toggle="modal" data-target="#productModal"
-                                        data-url="{% url 'products:modal' product.id %}"> Уточнить свою скидку
+                                        data-url="{% url 'products:modal' product.id %}"> Уточнить скидку
                                 </button>
-{#                                {% include "products/modal.html" %}#}
                             </div>
                         </div>
-                    {% endif %}
+
 
                 </div>
             </div>

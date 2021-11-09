@@ -121,6 +121,6 @@ window.addEventListener('load', () => {
         setInterval(function () {
             document.getElementById("random").innerHTML = Math.floor
             (Math.random() * 2) + 1;
-        }, 2000);
+        }, 1500);
     }
 });
