@@ -1,5 +1,8 @@
 from django.db import models
+from django.db.models.signals import pre_delete, pre_save
+from django.dispatch import receiver
 
+from baskets.models import Basket
 from geekshop import settings
 from products.models import Product
 
@@ -59,3 +62,23 @@ class OrderItem(models.Model):
     def get_product_cost(self):
         return self.product.price*self.quantity
 
+@receiver(pre_delete, sender=Basket)
+@receiver(pre_delete, sender=OrderItem)
+@receiver(pre_delete, sender=Order)
+def product_quantity_delete(sender, instance, **kwargs):
+    instance.product.quantity += instance.quantity
+    instance.product.save()
+
+@receiver(pre_save, sender=Basket)
+@receiver(pre_save, sender=OrderItem)
+def product_quantity_update(sender, instance, **kwargs):
+    d=9
+    if type(instance) == OrderItem:
+        pass
+    elif instance.pk:
+        # instance.product.quantity -= 1
+        instance.product.quantity -= instance.quantity - instance.get_item(int(instance.pk))
+        instance.product.quantity -= instance.quantity
+    else:
+        instance.product.quantity -= instance.quantity
+    instance.product.save()

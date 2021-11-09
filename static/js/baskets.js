@@ -32,7 +32,6 @@ $.ajaxSetup({
 });
 
 window.addEventListener('load', () => {
-// window.onload = () => {
     $('.product_catcher').on('click', 'button[type="button"]', (e) => {
         let t_href = e.target;
         let page_id = t_href.name;
@@ -68,9 +67,6 @@ window.addEventListener('load', () => {
         e.preventDefault();
     });
 
-    // $('.manager_detail').on('click', 'button[type="button"]', (e) => {
-    //     $(document).on('click', '.manager_detail', (e) =>{
-
     $('.product_view').on('click', 'button[type="button"]', (e) => {
         let t_href = e.target;
         let product_id = t_href.name;
@@ -100,9 +96,12 @@ window.addEventListener('load', () => {
     });
 
     $('#save_button').on('click', (e) => {
+        let flag = e.target.name
         $.ajax({
             type: 'GET',
             url: '/orders/basket_clear/',
+            data: {'flag': flag,
+            },
         }).done(function () {
             window.location.href = "/orders/";
         })

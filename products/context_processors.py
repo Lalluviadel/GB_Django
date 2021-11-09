@@ -1,7 +1,7 @@
 from baskets.models import Basket
 from products.models import ProductCategory, Product
 from ordersapp.models import Order
-
+import products.views
 
 
 def basket(request):
@@ -29,7 +29,6 @@ def orders(request):
             'orders': ''
         }
 
-import products.views
 def product_set(request, current_category=None):
     page = request.GET.get('page')
     if 'category_id' in request.resolver_match.kwargs:

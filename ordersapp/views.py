@@ -1,4 +1,6 @@
 from django.db import transaction
+from django.db.models import signals
+from django.db.models.signals import pre_delete
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
@@ -9,7 +11,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, D
 from baskets.models import Basket
 from geekshop.mixin import BaseClassContextMixin
 from ordersapp.forms import OrderItemsForm
-from ordersapp.models import Order, OrderItem
+from ordersapp.models import Order, OrderItem, product_quantity_delete
 from products.models import Product
 
 
@@ -134,7 +136,13 @@ def order_forming_complete(request, pk):
 
 def basket_clear(request):
     basket_items = Basket.objects.filter(user=request.user)
-    basket_items.delete()
+    if 'flag' in request.GET:
+        pre_delete.disconnect(receiver=product_quantity_delete, sender=Basket)
+        basket_items.delete()
+        pre_delete.connect(receiver=product_quantity_delete, sender=Basket)
+    else:
+        basket_items.delete()
+
     if request.is_ajax():
         result = render_to_string('baskets/baskets.html')
         return JsonResponse({'result': result})
