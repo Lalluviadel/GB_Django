@@ -16,6 +16,7 @@
                                 <tr>
                                     <th>Название продукта</th>
                                     <th>Категория</th>
+                                    <th>Текущая скидка</th>
                                     <th>Описание</th>
                                     <th>Цена</th>
                                     <th>Количество</th>
@@ -26,6 +27,7 @@
                                 <tr>
                                     <th>Название продукта</th>
                                     <th>Категория</th>
+                                    <th>Текущая скидка</th>
                                     <th>Описание</th>
                                     <th>Цена</th>
                                     <th>Количество</th>
@@ -39,6 +41,7 @@
                                                style="color: dodgerblue">{{ product.name }}</a>
                                         </td>
                                         <td>{{ product.category }}</td>
+                                        <td>{{ product.category.discount }}</td>
                                         <td>{{ product.description }}</td>
                                         <td>{{ product.price }}</td>
                                         <td>{{ product.quantity }}</td>
