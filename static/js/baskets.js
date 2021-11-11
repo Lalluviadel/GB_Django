@@ -78,12 +78,11 @@ window.addEventListener('load', () => {
     $('.send_to_proceed').on('click', 'button[type="button"]', (e) => {
         let t_href = e.target;
         $.ajax({
-                type: 'POST',
-                url: '/orders/forming_complete/' + t_href.name + '/',
-                success: (data) => {
-
-                    if (data) {
-                        $('.text-center').html(data)
+            type: 'POST',
+            url: '/orders/forming_complete/' + t_href.name + '/',
+            success: (data) => {
+            if (data) {
+                $('.text-center').html(data)
                 }
             },
         });

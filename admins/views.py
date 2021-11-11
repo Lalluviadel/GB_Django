@@ -4,7 +4,7 @@ from django.db.models import F
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.dispatch import receiver
@@ -68,9 +68,18 @@ class UserDeleteView(DeleteView):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.object.is_active = False
+        if request.user.id != kwargs['pk']:
+            self.object.is_active = False if self.object.is_active == True else True
+        # self.object.is_active = False
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
+
+    def post(self, request, *args, **kwargs):
+        objects = User.objects.all()
+        context = {'users': objects}
+        self.delete(request, *args, **kwargs)
+        result = render_to_string('included/table-users.html', context, request=request)
+        return JsonResponse({'result': result})
 
 
 class CategoriesListView(ListView, CustomDispatchMixin):
@@ -81,14 +90,16 @@ class CategoriesListView(ListView, CustomDispatchMixin):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Админка | Категории'
-        context['objects']: ProductCategory.objects.all()
+        context['objects']: ProductCategory.objects.all().select_related()
         return context
 
 
 class CategoriesUpdateView(UpdateView, CustomDispatchMixin):
     model = ProductCategory
     template_name = 'admins/admin-categories-update-delete.html'
+    # !!!!!!
     # form_class = CategoryUpdateFormAdmin
+    # !!!!!!
     form_class = CategoryProductsForm
     success_url = reverse_lazy('admins:admins_categories')
 
@@ -128,20 +139,17 @@ class CategoriesDeleteView(DeleteView, CustomDispatchMixin):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        # !!!!!
         self.object.product_set.update(available = False)
-        # !!!!!
-        self.object.available = False
+        self.object.available = False if self.object.available == True else True
+        # self.object.available = False
         self.object.save()
 
-        # !!!!! потом раскомментить - это он для аджакс сделал
-        # category = ProductCategory.objects.all()
-        # context = {'object_list': category}
-        # result = render_to_string('admins/admin-category-read.html', context, request=request)
-
-        # return JsonResponse({'result':result})
-        return HttpResponseRedirect(self.get_success_url())
-        # !!!!!
+    def post(self, request, *args, **kwargs):
+        category = ProductCategory.objects.all()
+        context = {'object_list': category}
+        self.delete(request, *args, **kwargs)
+        result = render_to_string('included/table-categories.html', context, request=request)
+        return JsonResponse({'result':result})
 
 class ProductsListView(ListView, CustomDispatchMixin):
     model = Product
@@ -186,9 +194,17 @@ class ProductsDeleteView(DeleteView, CustomDispatchMixin):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.object.available = False
+        self.object.available = False if self.object.available == True else True
+        # self.object.available = False
         self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
+
+    def post(self, request, *args, **kwargs):
+        objects = Product.objects.all()
+        context = {'objects': objects}
+        self.delete(request, *args, **kwargs)
+        result = render_to_string('included/table-products.html', context, request=request)
+        return JsonResponse({'result': result})
+        # return HttpResponseRedirect(self.get_success_url())
 
 # !!!!!!!!
 def db_profile_by_type(prefix, type, queries):
@@ -207,3 +223,15 @@ def product_is_active_update_productcategory_save(sender, instance, **kwargs):
 
        db_profile_by_type(sender, 'UPDATE', connection.queries)
 # !!!!!!!!
+
+
+def user_is_staff(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user.is_staff = False if user.is_staff == True else True
+    user.save()
+    if request.is_ajax():
+        objects = User.objects.all()
+        context = {'users': objects}
+        result = render_to_string('included/table-users.html', context, request=request)
+        return JsonResponse({'result': result})
+    return HttpResponseRedirect(reverse('admins:admins_user'))

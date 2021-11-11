@@ -9,58 +9,12 @@
                         <i class="fas fa-table mr-1"></i>
                         Пользователи
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                <tr>
-                                    <th>Имя пользователя</th>
-                                    <th>Имя</th>
-                                    <th>Фамилия</th>
-                                    <th>Адрес эл. почты</th>
-                                    <th>Персонал сайта</th>
-                                    <th>Активный</th>
-                                </tr>
-                                </thead>
-                                <tfoot>
-                                <tr>
-                                    <th>Имя пользователя</th>
-                                    <th>Имя</th>
-                                    <th>Фамилия</th>
-                                    <th>Адрес эл. почты</th>
-                                    <th>Персонал сайта</th>
-                                    <th>Активный</th>
-                                </tr>
-                                </tfoot>
-                                <tbody>
-                                {% for user in users %}
-                                    <tr {% if not user.is_active %} bgcolor="#d3d3d3"  {% elif user.is_staff %}
-                                                                    bgcolor="#ffd700" {% endif %}>
-                                        <td><a href="{% url 'admins:admins_user_update' user.id %}"
-                                               style="color: dodgerblue">{{ user.username }}</a>
-                                        </td>
-                                        <td>{{ user.first_name }}</td>
-                                        <td>{{ user.last_name }}</td>
-                                        <td>{{ user.email }}</td>
-                                        <td class="text-center">
-                                            {% if user.is_staff %}
-                                                <i class="fas fa-check-circle"></i>
-                                            {% else %}
-                                                <i class="fas fa-times-circle"></i>
-                                            {% endif %}
-                                        </td>
-                                        <td class="text-center">
-                                            {% if user.is_active %}
-                                                <i class="fas fa-check-circle"></i>
-                                            {% else %}
-                                                <i class="fas fa-times-circle"></i>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                    <div id="give_me_a_crown">
+                    <div id="update_users_catcher" class="card-body">
+
+                        {% include 'included/table-users.html' %}
+
+                    </div>
                     </div>
                     <div class="card-footer">
                         <a href="{% url 'admins:admins_user_create' %}">

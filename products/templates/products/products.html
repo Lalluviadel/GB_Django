@@ -17,7 +17,9 @@
                 <h1 class="my-4">GeekShop</h1>
                 <div class="list-group">
                     {% for category in categories %}
+                        {% if category.available %}
                         <a href="{% url 'products:category' category.id %}" class="list-group-item">{{ category }}</a>
+                    {% endif %}
                     {% endfor %}
                     <a href="{% url 'products:index' %}" class="list-group-item">Все товары</a>
                 </div>
