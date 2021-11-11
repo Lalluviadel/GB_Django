@@ -15,16 +15,17 @@
                 <div class="list-group" style="font-size: 22px">
                     {% for category in categories %}
                         {% if category.available %}
-                        <a href="{% url 'products:category' category.id %}" class="list-group-item">{{ category }}</a>
-                    {% endif %}
+                            <a href="{% url 'products:category' category.id %}"
+                               class="list-group-item">{{ category }}</a>
+                        {% endif %}
                     {% endfor %}
                     <input class="btn btn-info form-control my-2 btn-lg" type="button"
                            onclick="window.location.href = '{% url 'products:index' %}';" value="Все товары">
                     <input class="btn btn-info form-control my-2 btn-lg" type="button"
                            onclick="window.location.href = '{% url 'users:profile' %}';" value="Ваш профиль">
                     {% if user.is_authenticated %}
-                    <input class="btn btn-info form-control my-2 btn-lg" type="button"
-                           onclick="window.location.href = '{% url 'orders:list' %}';" value="Ваши заказы">
+                        <input class="btn btn-info form-control my-2 btn-lg" type="button"
+                               onclick="window.location.href = '{% url 'orders:list' %}';" value="Ваши заказы">
                     {% endif %}
                 </div>
             </div>

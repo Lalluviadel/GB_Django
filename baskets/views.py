@@ -4,9 +4,9 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, UpdateView
 
+from baskets.models import Basket
 from geekshop.mixin import UserDispatchMixin
 from products.models import Product
-from baskets.models import Basket
 
 
 class BasketCreateView(CreateView, UserDispatchMixin):

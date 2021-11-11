@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.functional import cached_property
 
 
 class ProductCategory(models.Model):
@@ -20,6 +19,7 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     available = models.BooleanField(default=True, db_index=True)
+
     # available = models.BooleanField(default=True)
 
     class Meta:

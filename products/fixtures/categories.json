@@ -1,47 +1,47 @@
 [
-{
-  "model": "products.productcategory",
-  "pk": 1,
-  "fields": {
-    "name": "Одежда",
-    "description": "Качественные и стильные вещи - главные элементы любого вашего образа",
-    "available": true
+  {
+    "model": "products.productcategory",
+    "pk": 1,
+    "fields": {
+      "name": "Одежда",
+      "description": "Качественные и стильные вещи - главные элементы любого вашего образа",
+      "available": true
+    }
+  },
+  {
+    "model": "products.productcategory",
+    "pk": 2,
+    "fields": {
+      "name": "Новинки",
+      "description": "Самые актуальные шедевры модной индустрии",
+      "available": true
+    }
+  },
+  {
+    "model": "products.productcategory",
+    "pk": 3,
+    "fields": {
+      "name": "Аксессуары",
+      "description": "Стильные и броские элементы для дополнения вашего образа",
+      "available": true
+    }
+  },
+  {
+    "model": "products.productcategory",
+    "pk": 4,
+    "fields": {
+      "name": "Подарки",
+      "description": "Эти вещи скажут вашим близким, что вы заботитесь об их уникальном образе",
+      "available": true
+    }
+  },
+  {
+    "model": "products.productcategory",
+    "pk": 5,
+    "fields": {
+      "name": "Обувь",
+      "description": "Качественная и ультрамодная обувь на любой сезон",
+      "available": true
+    }
   }
-},
-{
-  "model": "products.productcategory",
-  "pk": 2,
-  "fields": {
-    "name": "Новинки",
-    "description": "Самые актуальные шедевры модной индустрии",
-    "available": true
-  }
-},
-{
-  "model": "products.productcategory",
-  "pk": 3,
-  "fields": {
-    "name": "Аксессуары",
-    "description": "Стильные и броские элементы для дополнения вашего образа",
-    "available": true
-  }
-},
-{
-  "model": "products.productcategory",
-  "pk": 4,
-  "fields": {
-    "name": "Подарки",
-    "description": "Эти вещи скажут вашим близким, что вы заботитесь об их уникальном образе",
-    "available": true
-  }
-},
-{
-  "model": "products.productcategory",
-  "pk": 5,
-  "fields": {
-    "name": "Обувь",
-    "description": "Качественная и ультрамодная обувь на любой сезон",
-    "available": true
-  }
-}
 ]

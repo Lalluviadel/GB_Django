@@ -31,7 +31,6 @@ class UserAdminProfileForm(UserProfileForm):
 
 
 class CategoryProductsForm(ModelForm):
-
     class Meta:
         model = ProductCategory
         fields = ['name', 'description', 'discount']

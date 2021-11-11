@@ -36,7 +36,7 @@
                 <td>{{ product.category }}</td>
                 <td>{{ product.category.discount }}</td>
                 <td>{{ product.description }}</td>
-{#                <td>{{ product.price }}</td>#}
+                {#                <td>{{ product.price }}</td>#}
                 <td>{% real_discount product %}</td>
                 <td>{{ product.quantity }}</td>
                 <td class="text-center">
@@ -57,7 +57,8 @@
                     <form id="update_prod_btn">
                         {% csrf_token %}
                         {% if product.available %}
-                            <input name="{{ product.id }}" class="btn btn-secondary" style="font-size: 12px" value="Удалить"
+                            <input name="{{ product.id }}" class="btn btn-secondary" style="font-size: 12px"
+                                   value="Удалить"
                                    type="submit">
                         {% else %}
                             <input name="{{ product.id }}" class="btn btn-success" style="font-size: 12px"

@@ -5,6 +5,7 @@ from urllib.parse import urlunparse, urlencode
 import requests
 from django.utils import timezone
 from social_core.exceptions import AuthForbidden
+
 from users.models import UserProfile, User
 
 

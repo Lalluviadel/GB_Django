@@ -1,7 +1,7 @@
-from baskets.models import Basket
-from products.models import ProductCategory, Product
-from ordersapp.models import Order
 import products.views
+from baskets.models import Basket
+from ordersapp.models import Order
+from products.models import ProductCategory, Product
 
 
 def basket(request):

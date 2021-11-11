@@ -25,7 +25,8 @@
                             {% if product.quantity > 0 %}
                                 <div class="product_add">
                                     <div class="card-footer text-center">
-                                        <button type="button" id="to_the_basket_btn" class="btn btn-info" name="{{ product.id }}">Отправить
+                                        <button type="button" id="to_the_basket_btn" class="btn btn-info"
+                                                name="{{ product.id }}">Отправить
                                             в корзину
                                         </button>
                                     </div>
@@ -36,16 +37,17 @@
                                 </div>
                             {% endif %}
                         {% endif %}
-{#                        {% if product.quantity > 0 %}#}
+                        {#                        {% if product.quantity > 0 %}#}
                         <div class="product_view">
                             <div class="card-footer text-center">
-                                <button id="modal_btn" type="button" class="btn btn-outline-info" name="{{ product.id }}"
+                                <button id="modal_btn" type="button" class="btn btn-outline-info"
+                                        name="{{ product.id }}"
                                         data-toggle="modal" data-target="#productModal"
                                         data-url="{% url 'products:modal' product.id %}"> Уточнить скидку
                                 </button>
                             </div>
                         </div>
-{#                        {% endif %}#}
+                        {#                        {% endif %}#}
                     </div>
                 </div>
             {% endif %}

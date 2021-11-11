@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+
 from baskets.models import Basket
 from geekshop.mixin import BaseClassContextMixin
 from ordersapp.forms import OrderItemsForm

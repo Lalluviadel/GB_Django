@@ -1,4 +1,5 @@
 from django.urls import path
+
 from baskets.views import BasketCreateView, BasketDeleteView, BasketUpdateView
 
 app_name = 'baskets'

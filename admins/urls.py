@@ -1,4 +1,5 @@
 from django.urls import path
+
 from .views import index, UserListView, UserUpdateView, UserCreateView, UserDeleteView, \
     CategoriesListView, CategoriesUpdateView, CategoriesCreateView, CategoriesDeleteView, \
     ProductsListView, ProductsUpdateView, ProductsCreateView, ProductsDeleteView, user_is_staff
