@@ -29,7 +29,7 @@ $.ajaxSetup({
 });
 
 window.addEventListener('load', () => {
-    $('.product_catcher').on('click', 'button[type="button"]', (e) => {
+    $('.product_catcher').on('click', '#to_the_basket_btn', (e) => {
         let t_href = e.target;
         let page_id = t_href.name;
         $.ajax({
@@ -65,7 +65,7 @@ window.addEventListener('load', () => {
         e.preventDefault();
     });
 
-    $('.modal_catcher').on('click', 'button[type="button"]', (e) => {
+    $('.modal_catcher').on('click', '#modal_btn', (e) => {
         let t_href = e.currentTarget;
         let product_id = t_href.name;
         $.ajax({

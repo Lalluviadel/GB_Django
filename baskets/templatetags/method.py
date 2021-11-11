@@ -23,4 +23,5 @@ def bigger_then_you_think(num):
 
 @register.simple_tag(name='real_discount')
 def give_me_current_price(product):
-    return '%.2f' % (product.price * Decimal(1 - product.category.discount / 100))
+    if not isinstance(product, str):
+        return '%.2f' % (product.price * Decimal(1 - product.category.discount / 100))

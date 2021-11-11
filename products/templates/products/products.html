@@ -22,8 +22,10 @@
                            onclick="window.location.href = '{% url 'products:index' %}';" value="Все товары">
                     <input class="btn btn-info form-control my-2 btn-lg" type="button"
                            onclick="window.location.href = '{% url 'users:profile' %}';" value="Ваш профиль">
+                    {% if user.is_authenticated %}
                     <input class="btn btn-info form-control my-2 btn-lg" type="button"
                            onclick="window.location.href = '{% url 'orders:list' %}';" value="Ваши заказы">
+                    {% endif %}
                 </div>
             </div>
             <!-- /.col-lg-3 -->
