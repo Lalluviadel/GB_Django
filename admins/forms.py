@@ -31,9 +31,10 @@ class UserAdminProfileForm(UserProfileForm):
 
 
 class CategoryProductsForm(ModelForm):
+
     class Meta:
         model = ProductCategory
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'discount']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -42,7 +43,7 @@ class CategoryProductsForm(ModelForm):
 
 
 class ProductsForm(ModelForm):
-    category = forms.ModelChoiceField(queryset=ProductCategory.objects.all(),
+    category = forms.ModelChoiceField(queryset=ProductCategory.objects.all().select_related(),
                                       empty_label=None)
     image = forms.ImageField(widget=forms.FileInput, required=False)
 

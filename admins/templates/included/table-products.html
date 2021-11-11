@@ -1,0 +1,72 @@
+{% load method %}
+<div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" style="width: 100%; font-size: 14px">
+        <thead>
+        <tr>
+            <th>Название продукта</th>
+            <th>Категория</th>
+            <th>Скидка</th>
+            <th>Описание</th>
+            <th>Цена</th>
+            <th>Кол-во</th>
+            <th>Активный</th>
+            <th>Изменить</th>
+            <th>Удалить/<br/>вернуть</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <th>Название продукта</th>
+            <th>Категория</th>
+            <th>Скидка</th>
+            <th>Описание</th>
+            <th>Цена</th>
+            <th>Кол-во</th>
+            <th>Активный</th>
+            <th>Изменить</th>
+            <th>Удалить/<br/>вернуть</th>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for product in objects %}
+            <tr {% if not product.available %} style="background:#d3d3d3" {% endif %}>
+                <td><a href="{% url 'admins:admins_product_update' product.id %}"
+                       style="color: dodgerblue">{{ product.name }}</a>
+                </td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.category.discount }}</td>
+                <td>{{ product.description }}</td>
+{#                <td>{{ product.price }}</td>#}
+                <td>{% real_discount product %}</td>
+                <td>{{ product.quantity }}</td>
+                <td class="text-center">
+                    {% if product.available %}
+                        <i class="fas fa-check-circle"></i>
+                    {% else %}
+                        <i class="fas fa-times-circle"></i>
+                    {% endif %}
+                </td>
+                <td>
+                    <form action="{% url 'admins:admins_product_update' product.id %}">
+                        {% csrf_token %}
+                        <input class="btn btn-info" style="font-size: 12px" value="Изменить"
+                               type="submit">
+                    </form>
+                </td>
+                <td>
+                    <form id="update_prod_btn">
+                        {% csrf_token %}
+                        {% if product.available %}
+                            <input name="{{ product.id }}" class="btn btn-secondary" style="font-size: 12px" value="Удалить"
+                                   type="submit">
+                        {% else %}
+                            <input name="{{ product.id }}" class="btn btn-success" style="font-size: 12px"
+                                   value="Вернуть" type="submit">
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

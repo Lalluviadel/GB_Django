@@ -44,10 +44,13 @@
                             <label class="small mb-1" for="{{ form.description.id_for_label }}">Описание</label>
                             {{ form.description }}
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-lg-12" style="margin-top: 33px;">
-                            <input class="btn btn-info btn-block" type="submit" value="Сохранить">
+                        <div class="col-lg-3" style="margin-top: 33px;">
+                            <input class="btn float-lg-right btn-info btn-block btn-lg" type="submit" value="Сохранить">
+                        </div>
+                        <div class="col-lg-3" style="margin-top: 33px;">
+                            <input type="button" class="btn float-lg-right btn-danger btn-block btn-lg"
+                                   onclick="window.location.href = '{% url 'admins:admins_products' %}';"
+                                   value="Отмена"/>
                         </div>
                     </div>
                 </form>

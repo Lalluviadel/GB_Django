@@ -1,51 +1,52 @@
+{% load method %}
 <div class="product_items">
     <div class="row">
         {% for product in product_set %}
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card h-100">
-                    <a href="{% url 'products:detail' product.id %}">
-                        <img class="card-img-top"
-                             src="{{ product.image.url }}"
-                             alt="">
-                    </a>
-                    <div class="card-body">
-                        <h4 class="card-title">
-                            <a href="{% url 'products:detail' product.id %}">{{ product.name }}</a>
-                        </h4>
-                        <h5>{{ product.price }} руб.</h5>
-                        <p class="card-text">{{ product.description }}</p>
-                    </div>
-                    {% if user.is_authenticated %}
-                        <div>
-                            <p style="text-align: center;" class="card-text">В наличии {{ product.quantity }} шт.</p>
+            {% if product.available %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <a href="{% url 'products:detail' product.id %}">
+                            <img class="card-img-top"
+                                 src="{{ product.image.url }}"
+                                 alt="">
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="{% url 'products:detail' product.id %}">{{ product.name }}</a>
+                            </h4>
+                            <h5>{% real_discount product %} руб.</h5>
+                            <p class="card-text">{{ product.description }}</p>
                         </div>
-                        {% if product.quantity > 0 %}
-                            <div class="product_add">
-                                <div class="card-footer text-center">
-                                    <button type="button" class="btn btn-info" name="{{ product.id }}">Отправить
-                                        в корзину
-                                    </button>
+                        {% if user.is_authenticated %}
+                            <div>
+                                <p style="text-align: center;" class="card-text">В наличии {{ product.quantity }}
+                                    шт.</p>
+                            </div>
+                            {% if product.quantity > 0 %}
+                                <div class="product_add">
+                                    <div class="card-footer text-center">
+                                        <button type="button" class="btn btn-info" name="{{ product.id }}">Отправить
+                                            в корзину
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        {% else %}
-                            <div class="card-footer text-center">
-                                <p style="color:darkcyan;"><b>Ожидается поступление</b></p>
-                            </div>
+                            {% else %}
+                                <div class="card-footer text-center">
+                                    <p style="color:darkcyan;"><b>Ожидается поступление</b></p>
+                                </div>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                    <div class="product_view">
-                        <div class="card-footer text-center">
-                            <button type="button" class="btn btn-outline-info" name="{{ product.id }}"
-                                    data-toggle="modal" data-target="#productModal"
-                                    data-url="{% url 'products:modal' product.id %}"> Уточнить скидку
-                            </button>
+                        <div class="product_view">
+                            <div class="card-footer text-center">
+                                <button type="button" class="btn btn-outline-info" name="{{ product.id }}"
+                                        data-toggle="modal" data-target="#productModal"
+                                        data-url="{% url 'products:modal' product.id %}"> Уточнить скидку
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         {% endfor %}
     </div>
 </div>
-
-
-
