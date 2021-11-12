@@ -1,0 +1,33 @@
+{% extends 'admins/base.html' %}
+{% block content %}
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+                <h1 class="mt-4">Продукты</h1>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                        Продукты
+                    </div>
+                    <div id="update_prod_catcher" class="card-body">
+
+                        {% include 'included/table-products.html' %}
+
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'admins:admins_product_create' %}">
+                            <button class="btn btn-success">Создать новый продукт</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; GeekShop 2021</div>
+                </div>
+            </div>
+        </footer>
+    </div>
+{% endblock %}
