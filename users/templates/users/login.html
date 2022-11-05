@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-5">
             {% if form.errors or messages %}
-                <div class="alert {% if messages %} alert-success {% else %} alert-warning {% endif %}alert-dismissible fade show"
+                <div class="alert {% if messages %} alert-success {% else %} alert-warning {% endif %} alert-dismissible fade show"
                      role="alert" style="margin-top: 50px;">
                     {% if messages %}
                         {% for message in messages %}
