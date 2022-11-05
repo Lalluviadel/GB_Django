@@ -1,7 +1,6 @@
-from django.shortcuts import render, get_object_or_404
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render
 from django.views.generic import ListView
-from .models import Product,ProductCategory
+from .models import Product
 
 
 def index(request):
@@ -19,21 +18,9 @@ class ProductsView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Каталог'
-        context.update({'categorys': ProductCategory.objects.all()})
-
-        if self.kwargs:
-            product_list = Product.objects.filter(category_id=self.kwargs['category_id'])
-        else:
-            product_list = Product.objects.all()
-        paginator = Paginator(product_list, self.paginate_by)
-        page = self.request.GET.get('page')
-
-        try:
-            products = paginator.page(page)
-        except PageNotAnInteger:
-            products = paginator.page(1)
-        except EmptyPage:
-            products = paginator.page(paginator.num_pages)
-        context['products'] = products
-
         return context
+
+    def get_queryset(self):
+        if self.kwargs.keys():
+            return Product.objects.filter(category_id=self.kwargs['category_id'])
+        return Product.objects.all()

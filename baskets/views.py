@@ -1,44 +1,74 @@
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, UpdateView
+
+from geekshop.mixin import UserDispatchMixin
 from products.models import Product
 from baskets.models import Basket
 
 
-@login_required
-def basket_add(request, product_id):
-    user_select = request.user
-    product = Product.objects.get(id=product_id)
-    baskets = Basket.objects.filter(user=user_select, product=product)
-    if not baskets.exists():
-        Basket.objects.create(user=user_select, product=product, quantity=1)
-    else:
-        basket = baskets.first()
-        basket.quantity += 1
-        basket.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+class BasketCreateView(CreateView, UserDispatchMixin):
+    model = Basket
+    template_name = 'products/products.html'
+    fields = ['product']
+    success_url = reverse_lazy('products:index')
 
 
-@login_required
-def basket_remove(request, product_id):
-    Basket.objects.get(id=product_id).delete()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-@login_required
-def basket_edit(request, id, quantity):
-    if request.is_ajax():
-        basket = Basket.objects.get(id=id)
-        if quantity > 0:
-            basket.quantity = quantity
-            basket.save()
+    def post(self, request, *args, **kwargs):
+        product = self.get_object(Product.objects.filter())
+        baskets = Basket.objects.filter(user=request.user, product=product)
+        if not baskets.exists():
+            Basket.objects.create(user=request.user, product=product, quantity=1)
         else:
-            basket.delete()
+            basket = baskets.first()
+            basket.quantity += 1
+            basket.save()
 
-        baskets = Basket.objects.filter(user=request.user)
-        context = {
-            'baskets': baskets,
-        }
-        result = render_to_string('baskets/baskets.html', context)
+
+        # paginator = Paginator(Product.objects.filter(), per_page=3)
+        # try:
+        #     products_paginator = paginator.page(1)
+        # except PageNotAnInteger:
+        #     products_paginator = paginator.page(1)
+        # except EmptyPage:
+        #     products_paginator = paginator.page(paginator.num_pages)
+
+        # context = {
+            # 'products': products_paginator,
+        # }
+
+        context = super().get_context_data(**kwargs)
+        context.update({'products': Product.objects.all()})
+        # result = render_to_string('include/product_items.html', request=request)
+        result = render_to_string('include/product_items.html', context, request=request)
         return JsonResponse({'result': result})
+
+
+class BasketDeleteView(DeleteView):
+    model = Basket
+    template_name = 'users/profile.html'
+    success_url = reverse_lazy('users:profile')
+
+class BasketUpdateView(UpdateView, UserDispatchMixin):
+    model = Basket
+    success_url = reverse_lazy('users:profile')
+    template_name = 'users/profile.html'
+    fields = ['product']
+
+    def get(self, request, *args, **kwargs):
+        basket_id = kwargs.pop('id', None)
+        quantity = kwargs.pop('quantity', None)
+        if request.is_ajax():
+            basket = Basket.objects.get(id=basket_id)
+            if quantity > 0:
+                basket.quantity = quantity
+                basket.save()
+            else:
+                basket.delete()
+
+            result = render_to_string('baskets/baskets.html', request=request)
+
+            return JsonResponse({'result': result})
+        return redirect(self)

@@ -1,7 +1,11 @@
+import hashlib
+import random
 import re
+
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, \
     UserCreationForm, ValidationError, UserChangeForm
+
 from users.models import User
 
 
@@ -35,12 +39,24 @@ class UserRegisterForm(UserCreationForm):
             field.widget.attrs['class'] = 'form-control py-4'
 
     def clean(self):
-        """Checks name fields length"""
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            msg = "Email уже используется"
+            self.add_error('email', msg)
+
         new_cleaned_data = super().clean()
         for field in new_cleaned_data:
             if not field == 'image' and len(new_cleaned_data[field]) < 3:
                 raise ValidationError('Слишком короткий логин, имя или фамилия.')
         return new_cleaned_data
+
+    def save(self, commit=True):
+        user = super().save()
+        user.is_active = False
+        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:6]
+        user.activation_key = hashlib.sha1((user.email + salt).encode('utf8')).hexdigest()
+        user.save()
+        return user
 
 
 class UserProfileForm(UserChangeForm):
@@ -48,7 +64,7 @@ class UserProfileForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'image',)
+        fields = ('username', 'email', 'age', 'first_name', 'last_name', 'image',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -62,11 +78,8 @@ class UserProfileForm(UserChangeForm):
     def clean_image(self):
         data = self.cleaned_data['image']
         if data and data.size > 3145728:
-            # без if data and при попытке сохранить изменения профиля на сайте
-            # без загрузки картинки изначально пользователь получит ошибку
             raise forms.ValidationError('Файл с изображением не должен быть больше 3 MB')
         return data
-
 
     def clean_last_name(self):
         data = self.cleaned_data['last_name']
@@ -75,7 +88,6 @@ class UserProfileForm(UserChangeForm):
         elif len(data) < 3:
             raise ValidationError('Слишком короткая фамилия')
         return data
-
 
     def clean_first_name(self):
         data = self.cleaned_data['first_name']
