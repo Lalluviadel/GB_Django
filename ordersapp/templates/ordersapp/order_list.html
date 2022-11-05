@@ -37,12 +37,15 @@
                     <tr>
                         <td>
                             {% if item.status == 'FM' %}
-                                <button name="Status">Оформить</button></td>
+                                <div class="send_to_proceed">
+                                    <button type="button" class="btn btn-primary" name="{{ item.id }}">Оформить</button>
+                                </div>
                             {% elif item.status == 'CNC' %}
                                 <p>Заказ отменен</p>
                             {% else %}
                                 <p>Заказ в работе</p>
                             {% endif %}
+                        </td>
                         <td class="td1 orders_list">{{ item.pk }}</td>
                         <td>{{ item.created|date:"Y-m-d H:i:s" }}</td>
                         <td>{{ item.updated|date:"Y-m-d H:i:s" }}</td>
@@ -74,13 +77,15 @@
 
         <button class="btn btn-light btn-round">
             <a href="{% url 'index' %}">
-                на главную
+                На главную
             </a>
         </button>
-        <button class="btn btn-warning btn-round">
-            <a href="{% url 'orders:create' %}">
-                новый
+        <button class="btn btn-success btn-round">
+            <a href="{% url 'orders:create' %}" style="color: white">
+                Новый
             </a>
         </button>
     </div>
+
+
 {% endblock %}

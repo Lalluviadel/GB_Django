@@ -1,4 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.views.generic import ListView
 from .models import Product
 
@@ -26,9 +28,17 @@ class ProductsView(ListView):
         return Product.objects.all()
 
 
+class ModalWindow(ListView):
+    model = Product
+    template_name = 'products/modal.html'
 
-def modal_window(request, product_id):
-    m_product = get_object_or_404(Product, id=product_id)
-    context = {}
-    context['m_product'] = m_product
-    return render(request, 'products/modal.html', context)
+    def get(self, request, *args, **kwargs):
+        product_id = kwargs.pop('pk', None)
+        context = {}
+        if request.is_ajax():
+            m_product = Product.objects.get(id=product_id)
+            context['m_product'] = m_product
+            result = render_to_string('products/modal.html', context, request=request)
+
+            return JsonResponse({'result': result})
+        return redirect(self)

@@ -2,12 +2,15 @@ from django.db import transaction
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
 from baskets.models import Basket
+from geekshop.mixin import BaseClassContextMixin
 from ordersapp.forms import OrderItemsForm
 from ordersapp.models import Order, OrderItem
+
 
 
 class OrderList(ListView):
@@ -15,6 +18,7 @@ class OrderList(ListView):
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user, is_active=True)
+
 
 class OrderCreate(CreateView):
     model = Order
@@ -24,6 +28,7 @@ class OrderCreate(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'GeekShop | Создать заказ'
+
         OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemsForm, extra=1)
 
         if self.request.POST:
@@ -31,15 +36,15 @@ class OrderCreate(CreateView):
         else:
             basket_items = Basket.objects.filter(user=self.request.user)
             if basket_items:
-                OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemsForm, extra=basket_items.count())
+                OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemsForm,
+                                                     extra=basket_items.count())
                 formset = OrderFormSet()
 
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
-                    form.initial['quantity'] = basket_items[num].product
-                    form.initial['price'] = basket_items[num].product
+                    form.initial['quantity'] = basket_items[num].quantity
+                    form.initial['price'] = basket_items[num].product.price
                 basket_items.delete()
-
             else:
                 formset = OrderFormSet()
 
@@ -59,8 +64,6 @@ class OrderCreate(CreateView):
 
             if self.object.get_total_cost() == 0:
                 self.object.delete()
-
-
         return super().form_valid(form)
 
 
@@ -70,8 +73,9 @@ class OrderUpdate(UpdateView):
     success_url = reverse_lazy('orders:list')
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'GeekShop | Обновить заказ'
+        context = super(OrderUpdate, self).get_context_data(**kwargs)
+        context['title'] = 'GeekShop | Обновление заказ'
+
         OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemsForm, extra=1)
 
         if self.request.POST:
@@ -81,9 +85,9 @@ class OrderUpdate(UpdateView):
             for form in formset:
                 if form.instance.pk:
                     form.initial['price'] = form.instance.product.price
-
         context['orderitems'] = formset
         return context
+
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -98,22 +102,21 @@ class OrderUpdate(UpdateView):
 
             if self.object.get_total_cost() == 0:
                 self.object.delete()
+        return super(OrderUpdate, self).form_valid(form)
 
-        return super().form_valid(form)
 
 class OrderDelete(DeleteView):
     model = Order
     success_url = reverse_lazy('orders:list')
 
-class OrderDetail(DetailView):
+
+class OrderDetail(DetailView, BaseClassContextMixin):
     model = Order
-    title = 'Geekshop | Просмотр заказа'
+    title = 'GeekShop | Просмотр заказа'
+
 
 def order_forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
     order.status = Order.SEND_TO_PROCEED
-    items = order.get_items()
-    for item in items:
-        item.product.quantity -= item.quantity
     order.save()
-    return HttpResponseRedirect(reverse('orders:list'))
+    return  HttpResponseRedirect(reverse('orders:list'))

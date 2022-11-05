@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ProductsView, modal_window
+from .views import ProductsView, ModalWindow
 
 app_name = 'products'
 urlpatterns = [
@@ -7,5 +7,6 @@ urlpatterns = [
     path('category/<int:category_id>/', ProductsView.as_view(), name='category'),
     path('page/<int:page_id>/', ProductsView.as_view(), name='page'),
 
-    path('modal/<int:product_id>/', modal_window, name='modal'),
+    # path('modal/<int:product_id>/', modal_window, name='modal'),
+    path('modal/<int:pk>/', ModalWindow.as_view(), name='modal'),
 ]
