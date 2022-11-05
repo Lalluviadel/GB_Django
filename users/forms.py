@@ -38,7 +38,7 @@ class UserRegisterForm(UserCreationForm):
         """Checks name fields length"""
         new_cleaned_data = super().clean()
         for field in new_cleaned_data:
-            if len(new_cleaned_data[field]) < 3:
+            if not field == 'image' and len(new_cleaned_data[field]) < 3:
                 raise ValidationError('Слишком короткий логин, имя или фамилия.')
         return new_cleaned_data
 
