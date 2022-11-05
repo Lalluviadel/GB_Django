@@ -1,6 +1,6 @@
 from django.db import transaction
 from django.forms import inlineformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 
 from django.urls import reverse_lazy, reverse
@@ -10,7 +10,7 @@ from baskets.models import Basket
 from geekshop.mixin import BaseClassContextMixin
 from ordersapp.forms import OrderItemsForm
 from ordersapp.models import Order, OrderItem
-
+from products.models import Product
 
 
 class OrderList(ListView):
@@ -73,15 +73,16 @@ class OrderUpdate(UpdateView):
     success_url = reverse_lazy('orders:list')
 
     def get_context_data(self, **kwargs):
-        context = super(OrderUpdate, self).get_context_data(**kwargs)
-        context['title'] = 'GeekShop | Обновление заказ'
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'GeekShop | Обновление заказа'
 
         OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemsForm, extra=1)
 
         if self.request.POST:
             formset = OrderFormSet(self.request.POST, instance=self.object)
         else:
-            formset = OrderFormSet(instance=self.object)
+            queryset = self.object.orderitems.select_related()
+            formset = OrderFormSet(instance=self.object, queryset=queryset)
             for form in formset:
                 if form.instance.pk:
                     form.initial['price'] = form.instance.product.price
@@ -119,4 +120,21 @@ def order_forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
     order.status = Order.SEND_TO_PROCEED
     order.save()
-    return  HttpResponseRedirect(reverse('orders:list'))
+    return HttpResponseRedirect(reverse('orders:list'))
+
+def payment_result(request):
+    status = request.GET.get('ik_inv_st')
+    if status == 'success':
+        order_pk = request.GET.get('ik_pm_no')
+        order_item = Order.objects.get(pk=order_pk)
+        order_item.status = Order.PAID
+        order_item.save()
+    return HttpResponseRedirect(reverse('orders:list'))
+
+
+def get_product_price(request, pk):
+    if request.is_ajax():
+        product = Product.objects.get(pk=pk)
+        if product:
+            return JsonResponse({'price': product.price})
+        return JsonResponse({'price': 0})
