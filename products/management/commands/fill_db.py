@@ -1,11 +1,9 @@
-import os
 import json
-from django.contrib.auth.models import AbstractUser
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
-from users.models import User
-from products.models import ProductCategory, Product
 
+from products.models import ProductCategory, Product
+from users.models import User
 
 JSON_PATH = 'products/fixtures'
 
@@ -14,26 +12,6 @@ def load_from_json(file_name):
     with open(file_name, mode='r', encoding='utf-8') as infile:
 
         return json.load(infile)
-
-
-def create_superuser(username, password, email = "", first_name = "", last_name = ""):
-    invalid_inputs = ["", None]
-
-    if username.strip() in invalid_inputs or password.strip() in invalid_inputs:
-        return None
-
-    user = User(
-        username=username,
-        email=email,
-        first_name=first_name,
-        last_name=last_name,
-    )
-    user.set_password(password)
-    user.is_superuser = True
-    user.is_staff = True
-    user.save()
-
-    return user
 
 
 class Command(BaseCommand):
@@ -54,8 +32,8 @@ class Command(BaseCommand):
             prod = product.get('fields')
             category = prod.get('category')
             _category = ProductCategory.objects.get(id=category)
-            prod['category'] =_category
+            prod['category'] = _category
             new_category = Product(**prod)
             new_category.save()
 
-create_superuser('nikolay', '1')
+        User.objects.create_superuser('nikolay', 'my_email@mail.ru', '1')
