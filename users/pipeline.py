@@ -37,7 +37,13 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         user.userprofile.language = data['country']['title']
 
     if data['photo']:
-        user.userprofile.photo = data['photo']
+        # user.userprofile.photo = data['photo']
+        photo_link = data['photo']
+        photo_requests = requests.get(photo_link)
+        path_photo = f'user_image/{user.pk}.jpg'
+        with open (f'media/{path_photo}', 'wb') as photo:
+            photo.write(photo_requests.content)
+        user.image = path_photo
 
     bdate = datetime.strptime(data['bdate'], '%d.%m.%Y').date()
 
