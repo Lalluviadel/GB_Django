@@ -1,4 +1,5 @@
 import json
+
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
@@ -10,7 +11,6 @@ JSON_PATH = 'products/fixtures'
 
 def load_from_json(file_name):
     with open(file_name, mode='r', encoding='utf-8') as infile:
-
         return json.load(infile)
 
 

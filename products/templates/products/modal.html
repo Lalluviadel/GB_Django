@@ -5,19 +5,38 @@
     <div class="product_viewer">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <h5 class="modal-title" id="exampleModalLabel">{{ m_product.name }}</h5>
+                <h5 style="padding-top: 15px; font-size: 24px; font-style: oblique; text-decoration: underline;
+                color: darkcyan;" class="modal-title" id="exampleModalLabel">{{ m_product.name }}</h5>
                 <div class="modal-header">
-
                     <div class="card-body">
-                        <div>
-                            <p class="card-text">Обычная цена</p>
-                            <h4><s>{% discount m_product.price %}</s> руб.</h4>
-                        </div>
-                        <div style="background-color:#8ebf42">
-                            <p class="card-text">Специальная цена с вашей скидкой</p>
-                            <h2>{{ m_product.price }} руб.</h2>
-                        </div>
-                        <h6>Этот товар сейчас просматривают <span id="random" class="random"></span> человек </h6>
+                        {% if user.is_authenticated %}
+                            <div>
+                                <p class="card-text">Обычная цена</p>
+                                <h4><s>{% discount m_product.price %}</s> руб.</h4>
+                                <p class="card-text">Цена с накопительной скидкой</p>
+                                <h4><s>{{ m_product.price }}</s> руб.</h4>
+                            </div>
+                            <div style="background-color:#AFEEEE; padding: 10px;">
+                                <p class="card-text">Специальная цена для вас, <strong>{{ user.username }}</strong>,
+                                    только <strong>{% now 'j E' %}</strong></p>
+                                <h2><strong>{% real_discount m_product %}</strong> руб.</h2>
+                            </div>
+                            <h6>Этот товар сейчас просматривают <span id="random"></span> человек </h6>
+                        {% else %}
+                            <div>
+                                <p class="card-text">Обычная цена</p>
+                                <h4><s>{% discount m_product.price %}</s> руб.</h4>
+                            </div>
+                            <div style="background-color:#AFEEEE; padding: 10px;">
+                                <p class="card-text">Специальная цена в рамках акции, только
+                                    <strong>{% now 'j E' %}</strong></p>
+                                <h2><strong>{% real_discount m_product %}</strong> руб.</h2>
+                                <p class="card-text">Успейте <a href="{% url 'users:register' %}">
+                                    зарегистрироваться</a> или <a href="{% url 'users:login' %}">
+                                    войдите в личный кабинет</a></p>
+                            </div>
+                            <h6>Этот товар сейчас просматривают <span id="random"></span> человек </h6>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="modal-footer">

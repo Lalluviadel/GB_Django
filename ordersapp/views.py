@@ -1,8 +1,8 @@
 from django.db import transaction
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, get_object_or_404
-
+from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
@@ -28,7 +28,6 @@ class OrderCreate(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'GeekShop | Создать заказ'
-
         OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemsForm, extra=1)
 
         if self.request.POST:
@@ -43,8 +42,8 @@ class OrderCreate(CreateView):
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
-                    form.initial['price'] = basket_items[num].product.price
-                basket_items.delete()
+                    form.initial['price'] = basket_items[num].product.price * basket_items[num].quantity
+
             else:
                 formset = OrderFormSet()
 
@@ -64,6 +63,7 @@ class OrderCreate(CreateView):
 
             if self.object.get_total_cost() == 0:
                 self.object.delete()
+
         return super().form_valid(form)
 
 
@@ -74,21 +74,22 @@ class OrderUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'GeekShop | Обновление заказа'
-
+        context['title'] = 'GeekShop | Обновить заказ'
         OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemsForm, extra=1)
 
         if self.request.POST:
             formset = OrderFormSet(self.request.POST, instance=self.object)
         else:
-            queryset = self.object.orderitems.select_related()
-            formset = OrderFormSet(instance=self.object, queryset=queryset)
+            # Проверить потом, вот это улучшает или нет (или оно в методичке было)
+            # queryset = self.object.orderitems.select_related()
+            # formset = OrderFormSet(instance=self.object, queryset=queryset)
+            formset = OrderFormSet(instance=self.object)
             for form in formset:
                 if form.instance.pk:
-                    form.initial['price'] = form.instance.product.price
+                    form.initial['price'] = form.instance.product.price * form.initial['quantity']
+
         context['orderitems'] = formset
         return context
-
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -103,7 +104,8 @@ class OrderUpdate(UpdateView):
 
             if self.object.get_total_cost() == 0:
                 self.object.delete()
-        return super(OrderUpdate, self).form_valid(form)
+
+        return super().form_valid(form)
 
 
 class OrderDelete(DeleteView):
@@ -113,28 +115,50 @@ class OrderDelete(DeleteView):
 
 class OrderDetail(DetailView, BaseClassContextMixin):
     model = Order
-    title = 'GeekShop | Просмотр заказа'
+    title = 'Geekshop | Просмотр заказа'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['headings'] = ['', 'Категория', 'Товар', 'Цена, руб/шт',
+                               'Кол-во, шт', 'Общая сумма, руб', ]
+        return context
 
 
 def order_forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
     order.status = Order.SEND_TO_PROCEED
     order.save()
+    if request.is_ajax():
+        result = render_to_string('ordersapp/includes/inc_orders_table.html', request=request)
+        return JsonResponse({'result': result})
+
     return HttpResponseRedirect(reverse('orders:list'))
 
-def payment_result(request):
-    status = request.GET.get('ik_inv_st')
-    if status == 'success':
-        order_pk = request.GET.get('ik_pm_no')
-        order_item = Order.objects.get(pk=order_pk)
-        order_item.status = Order.PAID
-        order_item.save()
-    return HttpResponseRedirect(reverse('orders:list'))
 
+def basket_clear(request):
+    basket_items = Basket.objects.filter(user=request.user)
+    basket_items.delete()
+
+    if request.is_ajax():
+        result = render_to_string('baskets/baskets.html')
+        return JsonResponse({'result': result})
+    return HttpResponseRedirect(reverse('users:profile'))
+
+
+# Для приделывания робокассы:
+# def payment_result(request):
+#     status = request.GET.get('ik_inv_st')
+#     if status == 'success':
+#         order_pk = request.GET.get('ik_pm_no')
+#         order_item = Order.objects.get(pk=order_pk)
+#         order_item.status = Order.PAID
+#         order_item.save()
+#     return HttpResponseRedirect(reverse('orders:list'))
 
 def get_product_price(request, pk):
     if request.is_ajax():
         product = Product.objects.get(pk=pk)
         if product:
             return JsonResponse({'price': product.price})
-        return JsonResponse({'price': 0})
+
+    return JsonResponse({'price': 0})

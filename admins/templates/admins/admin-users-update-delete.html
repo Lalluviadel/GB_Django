@@ -54,30 +54,30 @@
                             </div>
                             <div class="col-lg-4" style="margin-top: 33px;">
                                 {% if user.is_active %}
-                                            <form action="{% url 'admins:admins_user_delete' user.id %}"
-                                                  method="post">
-                                            </form>
-                                            <form action="{% url 'admins:admins_user_delete' user.id %}"
-                                                  method="post">
-                                                {% csrf_token %}
-                                                <input class="btn btn-secondary btn-block"
-                                                       value="Удалить"
-                                                       type="submit">
-                                            </form>
-                                        </div>
+                                    <form action="{% url 'admins:admins_user_delete' user.id %}"
+                                          method="post">
+                                    </form>
+                                    <form action="{% url 'admins:admins_user_delete' user.id %}"
+                                          method="post">
+                                        {% csrf_token %}
+                                        <input class="btn btn-secondary btn-block"
+                                               value="Удалить"
+                                               type="submit">
+                                    </form>
+                                    </div>
                                 {% else %}
-                                            <form action="{% url 'admins:admins_user_delete' user.id %}"
-                                                  method="post">
-                                            </form>
-                                            <form action="{% url 'admins:admins_user_delete' user.id %}"
-                                                  method="post">
-                                                {% csrf_token %}
-                                                <input class="btn btn-success btn-block"
-                                                       value="Активировать"
-                                                       type="submit">
-                                            </form>
+                                    <form action="{% url 'admins:admins_user_delete' user.id %}"
+                                          method="post">
+                                    </form>
+                                    <form action="{% url 'admins:admins_user_delete' user.id %}"
+                                          method="post">
+                                        {% csrf_token %}
+                                        <input class="btn btn-success btn-block"
+                                               value="Активировать"
+                                               type="submit">
+                                    </form>
                                 {% endif %}
-                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

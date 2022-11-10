@@ -12,13 +12,16 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
 const csrftoken = getCookie('csrftoken');
+
 
 function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
+
 $.ajaxSetup({
-    beforeSend: function(xhr, settings) {
+    beforeSend: function (xhr, settings) {
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
@@ -26,21 +29,25 @@ $.ajaxSetup({
 });
 
 window.addEventListener('load', () => {
-    $('.product_add').on('click', 'button[type="button"]', (e) => {
+    $('.product_catcher').on('click', '#to_the_basket_btn', (e) => {
         let t_href = e.target;
         let page_id = t_href.name;
         $.ajax({
             type: 'POST',
-            headers: { 'X-CSRF-TOKEN': csrftoken}, // этот работает наконец
+            headers: {'X-CSRF-TOKEN': csrftoken},
             url: '/baskets/add/' + t_href.name + '/',
-            data: {'page_id': page_id},
+            data: {
+                'page_id': page_id,
+                'current_page': window.location.href
+            },
             success: (data) => {
                 if (data) {
                     $('.product_items').html(data.result)
                 }
             },
-            error:function(error){
-                console.log(error);}
+            error: function (error) {
+                console.log(error);
+            }
         });
         e.preventDefault();
     });
@@ -58,40 +65,59 @@ window.addEventListener('load', () => {
         e.preventDefault();
     });
 
-    // $('.manager_detail').on('click', 'button[type="button"]', (e) => {
-    //     $(document).on('click', '.manager_detail', (e) =>{
-
-    $('.product_view').on('click', 'button[class="btn btn-primary"]', (e) => {
-            let t_href = e.target;
-            let product_id = t_href.name;
-            $.ajax({
-                url: '/products/modal/' + product_id + '/',
-                success: (data) => {
-                    if (data) {
-                        $('.product_viewer').html(data.result)
+    $('.modal_catcher').on('click', '#modal_btn', (e) => {
+        let t_href = e.currentTarget;
+        let product_id = t_href.name;
+        $.ajax({
+            url: '/products/modal/' + product_id + '/',
+            success: (data) => {
+                if (data) {
+                    $('.product_viewer').html(data.result)
                 }
             },
         });
         e.preventDefault();
     });
 
-    $('.send_to_proceed').on('click', 'button[type="button"]', (e) => {
+    $('#list_all_orders').on('click', '#to_proceed_btn', (e) => {
         let t_href = e.target;
         $.ajax({
-            type: 'POST',
             url: '/orders/forming_complete/' + t_href.name + '/',
             success: (data) => {
-            if (data) {
-                $('.text-center').html(data)
+                if (data) {
+                    $('#list_all_orders').html(data.result)
                 }
             },
         });
         e.preventDefault();
     });
 
-    if ($("#random").length > 0){
-        setInterval(function() {
-        document.getElementById("random").innerHTML = Math.floor
-        (Math.random() * 2) + 1;}, 2000);
+    $('#save_button').on('click', (e) => {
+        $.ajax({
+            url: '/orders/basket_clear/',
+        }).done(function () {
+            window.location.href = "/orders/";
+        })
+        $(".read_and_save").submit();
+        e.preventDefault();
+    });
+
+    $('#basket_catcher').on('click', '#clear_basket', (e) => {
+        $.ajax({
+            url: '/orders/basket_clear/',
+            success: (data) => {
+                if (data) {
+                    $('.basket_list').html(data.result)
+                }
+            },
+        });
+        e.preventDefault();
+    });
+
+    if ($("#random").length > 0) {
+        setInterval(function () {
+            document.getElementById("random").innerHTML = Math.floor
+            (Math.random() * 2) + 1;
+        }, 1500);
     }
 });

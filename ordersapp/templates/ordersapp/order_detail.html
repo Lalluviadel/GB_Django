@@ -1,32 +1,54 @@
 {% extends "products/base.html" %}
 {% load static %}
-
 {% block content %}
-    {% include 'ordersapp/includes/inc_order_summary.html' %}
-    <div class="basket_list">
-        {% for item in object.items %}
-            {#        {% for item in object.orderitems.select_related %}#}
-            {% with product=item.product %}
-                <div class="basket_record">
-                <img style="height: 150px" src="{{ product.image.url }}"
-                     alt="{{ product.short_desc }}">
-                <span class="category_name">
-                   {{ product.category.name }}
-               </span>
-                <span class="product_name">{{ product.name }}</span>
-                <span class="product_price">
-                   {{ product.price }}&nbspруб
-               </span>
-            {% endwith %}
-        <span class="product_quantitiy">
-                   x {{ item.quantity }} шт.
-               </span>
-        <span class="product_cost">
-                    = {{ item.get_product_cost }}&nbspруб
-               </span>
-        </div>
-        {% endfor %}
+    <link rel="stylesheet" href="{% static '/css/products.css' %}" type="text/css">
+    <div class="quantity_catcher" style="display: flex; flex-direction: row;">
+        {% include 'ordersapp/includes/inc_order_summary.html' %}
+        {% include 'ordersapp/includes/inc_order_actions.html' %}
     </div>
-    {% include 'ordersapp/includes/inc_order_actions.html' %}
+    <div class="basket_list" style="font-size: 20px;">
+        <table class="order_basket_table" style="width: 100%;">
+            <thead class="order_table_head">
+            <tr style="color:white; text-align:center; border: 1px solid darkcyan;
+            background: #20B2AA; font-variant:small-caps">
+                {% for item in  headings %}
+                    <td style="border: 1px solid darkcyan; padding: 20px">{{ item }}</td>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in object.orderitems.select_related %}
+                <tr style="border: 1px solid darkcyan; background: #E0FFFF; cursor: pointer;"
+                    onmouseover="this.style.backgroundColor='#AFEEEE';"
+                    onmouseout="this.style.backgroundColor='#E0FFFF';">
+                    <td style="border: 1px solid darkcyan;  padding: 20px">
+                        <img style="height: 150px" src="{{ item.product.image.url }}"
+                             alt="{{ item.product.short_desc }}"></td>
+                    <td style="border: 1px solid darkcyan;  padding: 20px">
+                        <span class="category_name">{{ item.product.category.name }}</span>
+                    </td>
+                    <td style="border: 1px solid darkcyan;  padding: 20px; position: relative">
+                        <span class="product_name">{{ item.product.name }}</span>
+                        <form action="{% url 'products:detail' item.product.id %}">
+                            <hr>
+                            <button style="position: absolute; bottom: 0.5vw;  right: 0.5vw;" type="submit"
+                                    class="btn btn-outline-info my-2">
+                                <i class="fa fa-info"></i> К товару
+                            </button>
+                        </form>
+                    </td>
+                    <td style="border: 1px solid darkcyan;  padding: 20px">
+                        <span class="product_price">{{ item.product.price }}</span></td>
 
+                    <td style="border: 1px solid darkcyan;  padding: 20px">
+                        <span class="product_quantitiy">
+                            {{ item.quantity }}</span></td>
+                    <td style="border: 1px solid darkcyan;  padding: 20px">
+                        <span class="product_cost">
+                            {{ item.get_product_cost }}</span></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

@@ -6,9 +6,9 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, UpdateView
 
+from baskets.models import Basket
 from geekshop.mixin import UserDispatchMixin
 from products.models import Product
-from baskets.models import Basket
 
 
 class BasketCreateView(CreateView, UserDispatchMixin):
@@ -16,7 +16,6 @@ class BasketCreateView(CreateView, UserDispatchMixin):
     template_name = 'products/products.html'
     fields = ['product']
     success_url = reverse_lazy('products:index')
-
 
     def post(self, request, *args, **kwargs):
         product = self.get_object(Product.objects.filter().select_related())
@@ -43,23 +42,17 @@ class BasketCreateView(CreateView, UserDispatchMixin):
 
             # return render(request, 'products/products.html', {'some_flag': True})
 
+        request.GET = request.GET.copy()
 
-        # paginator = Paginator(Product.objects.filter(), per_page=3)
-        # try:
-        #     products_paginator = paginator.page(1)
-        # except PageNotAnInteger:
-        #     products_paginator = paginator.page(1)
-        # except EmptyPage:
-        #     products_paginator = paginator.page(paginator.num_pages)
+        source_page = request.POST['current_page']
+        _cat = source_page.split('category')
+        _page = source_page.split('page=')
+        if len(_cat) > 1:
+            request.GET['category_id'] = _cat[1].split('/')[1]
+        if len(_page) > 1:
+            request.GET['page'] = int(_page[1])
 
-        # context = {
-            # 'products': products_paginator,
-        # }
-
-        context = super().get_context_data(**kwargs)
-        context.update({'products': Product.objects.all()})
-        # result = render_to_string('include/product_items.html', request=request)
-        result = render_to_string('include/product_items.html', context, request=request)
+        result = render_to_string('include/product_items.html', request=request)
         return JsonResponse({'result': result})
 
 

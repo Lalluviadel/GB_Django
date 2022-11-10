@@ -9,26 +9,29 @@
 {% block content %}
     <!-- Page Content -->
     <div class="container">
-
         <div class="row">
-
             <div class="col-lg-3">
-
                 <h1 class="my-4">GeekShop</h1>
-                <div class="list-group">
+                <div class="list-group" style="font-size: 22px">
                     {% for category in categories %}
                         {% if category.available %}
-                        <a href="{% url 'products:category' category.id %}" class="list-group-item">{{ category }}</a>
-                    {% endif %}
+                            <a href="{% url 'products:category' category.id %}"
+                               class="list-group-item">{{ category }}</a>
+                        {% endif %}
                     {% endfor %}
-                    <a href="{% url 'products:index' %}" class="list-group-item">Все товары</a>
+                    <input class="btn btn-info form-control my-2 btn-lg" type="button"
+                           onclick="window.location.href = '{% url 'products:index' %}';" value="Все товары">
+                    <input class="btn btn-info form-control my-2 btn-lg" type="button"
+                           onclick="window.location.href = '{% url 'users:profile' %}';" value="Ваш профиль">
+                    {% if user.is_authenticated %}
+                        <input class="btn btn-info form-control my-2 btn-lg" type="button"
+                               onclick="window.location.href = '{% url 'orders:list' %}';" value="Ваши заказы">
+                    {% endif %}
                 </div>
-
             </div>
             <!-- /.col-lg-3 -->
 
             <div class="col-lg-9">
-
                 <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
                     <ol class="carousel-indicators">
                         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -58,36 +61,33 @@
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
-
-                {% include 'include/product_items.html' %}
-
+                <div class="modal_catcher" style="text-align: center">
+                    {% include "products/modal.html" %}
+                    <div class="product_catcher">
+                        {% include 'include/product_items.html' %}
+                    </div>
+                </div>
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
-                        <li class="page-item {% if not page_obj.has_previous %} disabled {% endif %}">
+                        <li class="page-item {% if not product_set.has_previous %} disabled {% endif %}">
                             <a class="page-link"
-                               href="{% if page_obj.has_previous %} ?page={{ page_obj.previous_page_number }}
+                               href="{% if product_set.has_previous %} ?page={{ product_set.previous_page_number }}
                                {% else %} # {% endif %}"
                                tabindex="-1" aria-disabled="true">Previous</a>
                         </li>
-
-                        {% for page in page_obj.paginator.page_range %}
+                        {% for page in product_set.paginator.page_range %}
                             <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
                         {% endfor %}
-
-                        <li class="page-item {% if not page_obj.has_next %} disabled {% endif %}">
+                        <li class="page-item {% if not product_set.has_next %} disabled {% endif %}">
                             <a class="page-link"
-                               href="{% if page_obj.has_next %} ?page={{ page_obj.next_page_number }} {% else %} # {% endif %}">Next</a>
+                               href="{% if product_set.has_next %} ?page={{ product_set.next_page_number }} {% else %} # {% endif %}">Next</a>
                         </li>
                     </ul>
                 </nav>
-
             </div>
-
         </div>
-
     </div>
     <!-- /.container -->
-
 {% endblock %}
 
 {% block footer %}

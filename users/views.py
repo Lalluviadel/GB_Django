@@ -1,13 +1,12 @@
 from django.conf import settings
-from django.contrib.auth import get_user_model
+from django.contrib import auth, messages
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.mail import send_mail
 from django.shortcuts import render, HttpResponseRedirect, redirect, get_object_or_404
-from django.contrib import auth, messages
 from django.urls import reverse, reverse_lazy
 from django.views.generic import FormView, UpdateView
-from geekshop.mixin import BaseClassContextMixin, UserDispatchMixin
 
+from geekshop.mixin import BaseClassContextMixin, UserDispatchMixin
 from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm
 from users.models import User
 
@@ -18,13 +17,12 @@ class LoginListView(LoginView, BaseClassContextMixin):
     title = 'Geekshop - Авторизация'
     success_url = 'index'
 
-# !!!!!
     def get(self, request, *args, **kwargs):
-        result = super().get( request, *args, **kwargs)
+        result = super().get(request, *args, **kwargs)
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse_lazy(self.success_url))
         return result
-# !!!!!
+
 
 class RegisterListView(FormView, BaseClassContextMixin):
     model = User
@@ -43,7 +41,6 @@ class RegisterListView(FormView, BaseClassContextMixin):
                                           f'ссылкой для активации аккаунта {user.username}')
             return redirect(self.success_url)
         messages.warning(request, f'{form.errors}')
-
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     @staticmethod
@@ -88,20 +85,12 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
 
     def post(self, request, *args, **kwargs):
         form = UserProfileForm(data=request.POST, files=request.FILES, instance=request.user)
-        form_edit = UserProfileEditForm(data=request.POST,instance=request.user.userprofile)
+        form_edit = UserProfileEditForm(data=request.POST, instance=request.user.userprofile)
         if form.is_valid() and form_edit.is_valid():
             form.save()
             return redirect(self.success_url)
         return redirect(self.success_url)
 
+
 class Logout(LogoutView):
     template_name = 'products/index.html'
-
-
-# class MyBackend:
-#
-#     def get_user(self, user_id):
-#         try:
-#             return get_user_model().objects.select_related().get(pk=user_id)
-#         except get_user_model().DoesNotExist:
-#             return None

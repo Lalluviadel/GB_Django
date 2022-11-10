@@ -106,8 +106,8 @@ class UserProfileForm(UserChangeForm):
             raise ValidationError('Слишком короткое имя')
         return data
 
-class UserProfileEditForm(forms.ModelForm):
 
+class UserProfileEditForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('tagline', 'about', 'gender', 'language')
