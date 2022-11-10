@@ -34,6 +34,7 @@ class Basket(models.Model):
         return f'Корзина для {self.user.username} | Продукт {self.product.name}'
 
     def sum(self):
+        # self.product.queryset = Product.objects.all().select_related('price')
         return self.quantity * self.product.price
 
 
@@ -43,7 +44,9 @@ class Basket(models.Model):
 
     @staticmethod
     def total_sum(user):
+
         return sum(basket.sum() for basket in Basket.get_baskets(user))
+
 
     @staticmethod
     def get_quantity(pk):

@@ -215,6 +215,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 )
 
+
 # if DEBUG:
 #     def show_toolbar(request):
 #         return True
@@ -254,3 +255,4 @@ SOCIAL_AUTH_PIPELINE = (
 # }
 
 LOW_CACHE = True
+

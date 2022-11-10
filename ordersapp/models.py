@@ -74,9 +74,9 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product,verbose_name='продукты',on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(verbose_name='количество',default=0)
 
-
     def get_product_cost(self):
         return  self.product.price * self.quantity
+        # return self.prod.price * self.quantity
 
     @staticmethod
     def get_quantity(pk):

@@ -65,6 +65,7 @@ class ProductsView(ListView):
             # return Product.objects.filter(category_id=self.kwargs['category_id']).select_related('category')
             products = get_link_product()
             return products
+
         # return Product.objects.all()
         return Product.objects.all().select_related('category')
 
