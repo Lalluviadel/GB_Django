@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch import receiver
 from django.conf import settings
+from django.utils.functional import cached_property
 
 from baskets.models import Basket
 from products.models import Product
@@ -59,19 +60,19 @@ class Order(models.Model):
         self.is_active = False
         self.save()
 
+    def get_summary(self):
+        items = self.items
+        return {
+            'get_total_cost': sum(list(map(lambda x: x.get_product_cost(), items))),
+            'get_total_quantity': sum(list(map(lambda x: x.quantity, items)))
+        }
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,verbose_name='заказ',related_name='orderitems',
                               on_delete=models.CASCADE)
     product = models.ForeignKey(Product,verbose_name='продукты',on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(verbose_name='количество',default=0)
-
-
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     if self.product_id:
-    #         self.prod = Product.objects.select_related().get(id=self.product_id)
-
 
     def get_product_cost(self):
         return  self.product.price * self.quantity
@@ -91,7 +92,7 @@ def product_quantity_update_delete(sender, instance, **kwargs):
 @receiver(pre_save, sender=OrderItem)
 def product_quantity_update_delete(sender, instance, **kwargs):
     if instance.pk:
-        instance.product.quantity -= instance.quantity - instance.get_item(int(instance.pk))
+        instance.product.quantity -= instance.quantity - instance.get_quantity(int(instance.pk))
     else:
         instance.product.quantity -= instance.quantity
     instance.product.save()

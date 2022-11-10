@@ -4,7 +4,28 @@
         <main>
             <div class="container-fluid">
                 <h1 class="mt-4">Административная панель</h1>
-
+                <div class="container" style="
+                font-size: 500%;
+                display: grid;
+                grid-gap: 5px;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                grid-template-rows: repeat(2, 250px);">
+                    <form action="{% url 'admins:admins_user' %}">
+                        <button style="margin-top: 33px;width: 100%;
+                        height: 100%;
+                        object-fit: cover;" type="submit"><i class="fa fa-users"></i></button>
+                    </form>
+                    <form action="{% url 'admins:admins_categories' %}">
+                        <button style="margin-top: 33px;width: 100%;
+                        height: 100%;
+                        object-fit: cover;" type="submit"><i class="fa fa-archive"></i></button>
+                    </form>
+                    <form action="{% url 'admins:admins_products' %}">
+                        <button style="margin-top: 33px;width: 100%;
+                        height: 100%;
+                        object-fit: cover;" type="submit"><i class="fas fa-tshirt"></i></button>
+                    </form>
+                </div>
             </div>
         </main>
         <footer class="py-4 bg-light mt-auto">

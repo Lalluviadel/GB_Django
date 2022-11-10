@@ -1,6 +1,8 @@
+{% load method %}
 <div class="product_items">
     <div class="row">
         {% for product in page_obj %}
+            {% if product.available %}
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card h-100">
                     <a href="#">
@@ -10,9 +12,9 @@
                     </a>
                     <div class="card-body">
                         <h4 class="card-title">
-                            <a href="#">{{ product.name }}</a>
+                            <a href="{% url 'products:detail' product.id %}">{{ product.name }}</a>
                         </h4>
-                        <h5>{{ product.price }} руб.</h5>
+                        <h5>{% real_discount product %} руб.</h5>
                         <p class="card-text">{{ product.description }}</p>
 {#                        <p class="card-text">{{ product.category.name }}</p>#}
                     </div>
@@ -37,6 +39,7 @@
 
                 </div>
             </div>
+            {% endif %}
         {% endfor %}
     </div>
 </div>

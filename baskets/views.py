@@ -1,3 +1,5 @@
+from django.db import connection
+from django.db.models import F
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
@@ -25,10 +27,20 @@ class BasketCreateView(CreateView, UserDispatchMixin):
                 Basket.objects.create(user=request.user, product=product, quantity=1)
             else:
                 basket = baskets.first()
-                basket.quantity += 1
+                # !!!!!
+                # basket.quantity += 1
+                basket.quantity = F('quantity')+1
+                # !!!!!
                 basket.save()
+
+
+                # !!!!!
+                update_queries = list(filter(lambda x: 'UPDATE' in x['sql'], connection.queries))
+                print (f'basket_add {update_queries}')
+                # !!!!!
         else:
             pass
+
             # return render(request, 'products/products.html', {'some_flag': True})
 
 

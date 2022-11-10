@@ -1,8 +1,11 @@
 from django.db import models
+from django.utils.functional import cached_property
+
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField(blank=True)
+    discount = models.PositiveIntegerField(default=0)
     available = models.BooleanField(default=True)
 
     def __str__(self):
